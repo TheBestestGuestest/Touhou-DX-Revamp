@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Player Projectile
+  - Enemy Projectile
+  - Enemy
+  - Drop
   layers:
   - Default
   - TransparentFX

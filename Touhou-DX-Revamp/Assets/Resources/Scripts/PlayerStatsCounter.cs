@@ -4,8 +4,5 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerStatsCounter : MonoBehaviour {
-    public Text lives;
-    public Text bombs;
-    public Text gauge;
-    public Text power;
+    public Text lives, bombs, gauge, power;
 }

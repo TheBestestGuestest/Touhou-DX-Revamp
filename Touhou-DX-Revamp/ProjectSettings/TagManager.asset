@@ -17,8 +17,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - PlayerEncounterable
+  - BossEncounterable
   - 
   - 
   - 
@@ -42,6 +42,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 341968789
+    locked: 0
+  - name: Enemies
+    uniqueID: 3863458183
+    locked: 0
+  - name: Player
+    uniqueID: 3624303717
+    locked: 0
+  - name: Projectiles
+    uniqueID: 3243549619
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

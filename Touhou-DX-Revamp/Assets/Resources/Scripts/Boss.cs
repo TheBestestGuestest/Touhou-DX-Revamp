@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Boss : MonoBehaviour {
-    public int maxHealth;
-    public int currHealth;
+    [HideInInspector]
+    public int maxHealth, currHealth;
 
     private float shootingRate = 2f;
     private float shootTimer = 1f;
@@ -48,7 +48,7 @@ public class Boss : MonoBehaviour {
         //movement
         if (moveTimer >= moveRate * 3f) {
             temp = destination;
-            destination = new Vector3(Random.value * 12f - 6, Random.value * 3 + 1, temp.z);
+            destination = new Vector3(Random.value * (-InGameDimentions.screenWidth + 0.333f) - InGameDimentions.centerX, Random.value * 3 + 1, temp.z);
             moveTimer = 0f;
         }
         else if (moveTimer <= moveRate || !trans.position.Equals(destination)) trans.position = Vector3.Lerp(temp, destination, moveTimer / moveRate);

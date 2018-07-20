@@ -10,11 +10,6 @@ public class PlayerInputControl : MonoBehaviour {
 
     private float shootTimer = 0.05f;
 
-    private float yMax = 5;
-    private float yMin = -5;
-    private float xMin = -20.0f / 3.0f;
-    private float xMax = 20.0f / 3.0f;
-
     private Sprite normalHitbox;
     private Sprite slowHitBox;
     private Sprite invulnPlayer;
@@ -59,8 +54,8 @@ public class PlayerInputControl : MonoBehaviour {
         if (Input.GetKey(KeyCode.RightArrow)) pos.x += dist;
         if (Input.GetKey(KeyCode.UpArrow)) pos.y += dist;
         if (Input.GetKey(KeyCode.DownArrow)) pos.y -= dist;
-        pos.x = Mathf.Max(Mathf.Min(pos.x, xMax), xMin);
-        pos.y = Mathf.Max(Mathf.Min(pos.y, yMax), yMin);
+        pos.x = Mathf.Max(Mathf.Min(pos.x, InGameDimentions.rightEdge), InGameDimentions.leftEdge);
+        pos.y = Mathf.Max(Mathf.Min(pos.y, InGameDimentions.topEdge), InGameDimentions.bottomEdge);
         trans.position = pos;
 
         //shooting

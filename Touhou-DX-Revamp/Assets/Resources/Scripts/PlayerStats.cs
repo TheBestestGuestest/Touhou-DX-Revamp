@@ -20,7 +20,7 @@ public class PlayerStats : MonoBehaviour {
     private int maxBombs;
     public int currBombs;
 
-    private readonly Vector3 SPAWN_LOC = new Vector3(0, -3, 0);
+    private readonly Vector3 SPAWN_LOC = new Vector3(InGameDimentions.centerX, -3, 0);
     private Transform trans;
 
     public bool isInvuln;
@@ -56,10 +56,12 @@ public class PlayerStats : MonoBehaviour {
         int dec = powerReqs[Mathf.Min(powerLevel + 1, powerReqs.Length - 1)] / 100;
         if (powerTimer >= powerDecRate) {
             if (powerGauge - dec <= 0) {
+                if (powerLevel != 0) powerGauge = powerReqs[powerLevel];
+                else powerGauge = 0;
+
                 powerLevel = Mathf.Max(0, powerLevel - 1);
-                changePowerLevelStats(--powerLevel);
+                changePowerLevelStats(powerLevel);
                 psc.power.text = powerLevel.ToString();
-                powerGauge = powerReqs[powerLevel + 1];
             }
             else powerGauge -= dec;
             psc.gauge.text = powerGauge.ToString();

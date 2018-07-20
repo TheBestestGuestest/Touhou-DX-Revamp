@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour {
-
+    [HideInInspector]
     public int damage;
+    [HideInInspector]
     public bool isPiercing;
-    
+
     private MovePath path;
     private float totalTime = 0;
     private Vector3 spawnPos;

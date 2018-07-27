@@ -10,7 +10,7 @@ public class Drop : Projectile {
     private float attractStrength;  //lower is better LUL
 
     public static Drop Create(string prefab, Vector3 pos, Effect e, float s, float a) {
-        Drop drop = (Instantiate((GameObject)Resources.Load(prefab), pos, Quaternion.identity) as GameObject).GetComponent<Drop>();
+        Drop drop = (Instantiate((GameObject)Resources.Load(prefab), pos, Quaternion.identity, ProjectilePool.SharedInstance.transform) as GameObject).GetComponent<Drop>();
         //drop.effect = e;
         drop.attractStrength = s;
         drop.transform.Rotate(new Vector3(0, 0, a));

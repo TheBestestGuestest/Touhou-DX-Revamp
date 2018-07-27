@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBomb : MonoBehaviour {
+    private string enemyProjectileTag = "Enemy Projectile";
     void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.tag.Equals("Enemy Projectile")) {
+        if (collision.CompareTag(enemyProjectileTag)) {
             ProjectilePool.SharedInstance.ReturnToPool(collision.gameObject);
         }
     }

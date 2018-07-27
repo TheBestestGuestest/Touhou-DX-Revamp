@@ -86,6 +86,9 @@ public class PlayerBulletCache {
     private MovePath[][] bombPath;
     private MovePath straightShot;
 
+    private string bulletPrefab = "Prefabs/PlayerBullet";
+    private string bombPrefab = "Prefabs/PlayerBomb";
+
     public PlayerBulletCache(Transform transform) {
         trans = transform;
         cacheAll();
@@ -113,12 +116,12 @@ public class PlayerBulletCache {
         Vector3 pos = trans.position;
         switch (ps.powerLevel) {
             case 0:
-                ProjectilePool.SharedInstance.GetPooledProjectile("Prefabs/PlayerBullet", new Vector3(pos.x, pos.y + 0.5f, pos.z), straightShot, ps.bulletDamage, false);
+                ProjectilePool.SharedInstance.GetPooledProjectile(bulletPrefab, new Vector3(pos.x, pos.y + 0.5f, pos.z), straightShot, ps.bulletDamage, false);
                 break;
             case 1:
             case 2:
-                ProjectilePool.SharedInstance.GetPooledProjectile("Prefabs/PlayerBullet", new Vector3(pos.x - 0.25f, pos.y + 0.5f, pos.z), straightShot, ps.bulletDamage, false);
-                ProjectilePool.SharedInstance.GetPooledProjectile("Prefabs/PlayerBullet", new Vector3(pos.x + 0.25f, pos.y + 0.5f, pos.z), straightShot, ps.bulletDamage, false);
+                ProjectilePool.SharedInstance.GetPooledProjectile(bulletPrefab, new Vector3(pos.x - 0.25f, pos.y + 0.5f, pos.z), straightShot, ps.bulletDamage, false);
+                ProjectilePool.SharedInstance.GetPooledProjectile(bulletPrefab, new Vector3(pos.x + 0.25f, pos.y + 0.5f, pos.z), straightShot, ps.bulletDamage, false);
                 break;
         }
     }
@@ -129,13 +132,13 @@ public class PlayerBulletCache {
         string prefab;
         switch (ps.powerLevel) {
             case 0:
-                prefab = "Prefabs/PlayerBomb";
+                prefab = bombPrefab;
                 break;
             case 1:
-                prefab = "Prefabs/PlayerBomb";
+                prefab = bombPrefab;
                 break;
             case 2:
-                prefab = "Prefabs/PlayerBomb";
+                prefab = bombPrefab;
                 break;
             default:
                 prefab = null;

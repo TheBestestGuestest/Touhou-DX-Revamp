@@ -19,6 +19,7 @@ public class Boss : MonoBehaviour {
     private float moveTimer;
     private float moveRate = 3f;
 
+    private string playerProjectileTag = "Player Projectile";
     void Awake() {
         trans = transform;
         bhb = GetComponentInChildren<BossHealthBar>() as BossHealthBar;
@@ -29,13 +30,15 @@ public class Boss : MonoBehaviour {
     void OnEnable() {
         GameQueue.SharedInstance.isQueueing = false;
 
-        maxHealth = 10;
+        maxHealth = 100;
         currHealth = maxHealth;
         moveTimer = 0f;
         shootTimer = 0f;
 
         destination = trans.position;
         temp = destination;
+
+        bhb.updateBar();
     }
 
     void Update() {
@@ -58,7 +61,7 @@ public class Boss : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.tag.Equals("Player Projectile")) {
+        if (collision.CompareTag(playerProjectileTag)) {
             string colName = collision.gameObject.name;
             Projectile p = collision.gameObject.GetComponent<Projectile>();
 
@@ -79,7 +82,6 @@ public class Boss : MonoBehaviour {
     public bool isAlive() {
         return currHealth > 0;
     }
-
 }
 
 public class BossBulletPatterns {
@@ -90,6 +92,14 @@ public class BossBulletPatterns {
     private MovePath[][] cachedCirclePattern = new MovePath[4][];
     private MovePath[][][] cachedSwirlPattern = new MovePath[2][][];
     private MovePath[][] cachedSweepPattern = new MovePath[3][];
+
+    private WaitForSeconds circleWait = new WaitForSeconds(0.1f);
+    private WaitForSeconds swirlWait = new WaitForSeconds(0.5f);
+    private WaitForSeconds sweepWait = new WaitForSeconds(0.2f);
+
+    private string circlePrefab = "Prefabs/BossBomb";
+    private string swirlPrefab = "Prefabs/BossSwirl";
+    private string sweepPrefab = "Prefabs/BossPotato";
 
     private MovePath circlePattern(int i, int j) {
         return delegate (float t, Vector3 pos) {
@@ -118,29 +128,32 @@ public class BossBulletPatterns {
     private IEnumerator makeCirclePattern() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 16; j++) {
-                ProjectilePool.SharedInstance.GetPooledProjectile("Prefabs/BossBomb", trans.position, cachedCirclePattern[i][j]);
+                ProjectilePool.SharedInstance.GetPooledProjectile(circlePrefab, trans.position, cachedCirclePattern[i][j]);
             }
-            yield return new WaitForSeconds(0.1f);
+            yield return circleWait;
         }
+        yield break;
     }
     private IEnumerator makeSwirlPattern() {
         int dir = Random.value >= 0.5 ? 1 : -1;
         for (int i = 0; i < 4; i++) {
             dir *= -1;
             for (int j = 0; j < 16; j++) {
-                ProjectilePool.SharedInstance.GetPooledProjectile("Prefabs/BossSwirl", trans.position, cachedSwirlPattern[(dir + 1) / 2][i][j]);
+                ProjectilePool.SharedInstance.GetPooledProjectile(swirlPrefab, trans.position, cachedSwirlPattern[(dir + 1) / 2][i][j]);
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return swirlWait;
         }
+        yield break;
     }
     private IEnumerator makeSweepPattern() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < (i == 1 ? 7 : 8); j++) {
                 float dir = -1f + j / 3.5f + (i == 1 ? 1 / 7f : 0);
-                ProjectilePool.SharedInstance.GetPooledProjectile("Prefabs/BossPotato", trans.position, cachedSweepPattern[i][j]);
+                ProjectilePool.SharedInstance.GetPooledProjectile(sweepPrefab, trans.position, cachedSweepPattern[i][j]);
             }
-            yield return new WaitForSeconds(0.2f);
+            yield return sweepWait;
         }
+        yield break;
     }
 
     public BossBulletPatterns(Transform transform) {

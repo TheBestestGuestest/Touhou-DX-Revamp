@@ -18,14 +18,26 @@ public class ProjectilePool : MonoBehaviour {
         pooledDrops = new List<GameObject>();
     }
 
+    private bool CustomEndsWith(string a, string b) {
+        int ap = a.Length - 1;
+        int bp = b.Length - 1;
+
+        while (ap >= 0 && bp >= 0 && a[ap] == b[bp]) {
+            ap--;
+            bp--;
+        }
+        return (bp < 0 && a.Length >= b.Length) ||
+
+                (ap < 0 && b.Length >= a.Length);
+    }
+
     public GameObject GetPooledProjectile(string prefab, Vector3 pos, MovePath mp, int dmg = 0, bool p = false) {
-        for (int i = 0; i < pooledProjectiles.Count; i++) {
-            GameObject pp = pooledProjectiles[i];
-            if (!pp.gameObject.activeInHierarchy && prefab.EndsWith(pp.name)) {
+        foreach (GameObject pp in pooledProjectiles) {
+            if (!pp.gameObject.activeInHierarchy && CustomEndsWith(prefab, pp.name)) {
                 Projectile projectile = isProjectile(pp);
                 projectile.setValues(pos, mp, dmg, p);
                 pp.SetActive(true);
-                return pooledProjectiles[i];
+                return pp;
             }
         }
 
@@ -34,13 +46,12 @@ public class ProjectilePool : MonoBehaviour {
         return obj;
     }
     public GameObject GetPooledDrop(string prefab, Vector3 pos, Effect e, float s, float a) {
-        for (int i = 0; i < pooledDrops.Count; i++) {
-            GameObject pp = pooledDrops[i];
-            if (!pp.gameObject.activeInHierarchy && prefab.EndsWith(pp.name)) {
-                Drop drop = isDrop(pp);
+        foreach(GameObject pd in pooledDrops) { 
+            if (!pd.gameObject.activeInHierarchy && CustomEndsWith(prefab, pd.name)) {
+                Drop drop = isDrop(pd);
                 drop.setValues(pos);
-                pp.SetActive(true);
-                return pooledDrops[i];
+                pd.SetActive(true);
+                return pd;
             }
         }
 

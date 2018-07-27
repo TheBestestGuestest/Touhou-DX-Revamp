@@ -15,8 +15,8 @@ public class Projectile : MonoBehaviour {
     private Vector3 spawnPos;
     
     public static Projectile Create(string prefab, Vector3 pos, MovePath mp, int dmg = 0, bool p = false) {
-        Projectile projectile = (Instantiate((GameObject)Resources.Load(prefab), pos, Quaternion.identity) as GameObject).GetComponent<Projectile>();
-        projectile.name = prefab.Substring(prefab.LastIndexOf("/") + 1);
+        Projectile projectile = (Instantiate((GameObject)Resources.Load(prefab), pos, Quaternion.identity, ProjectilePool.SharedInstance.transform) as GameObject).GetComponent<Projectile>();
+        projectile.name = prefab.Substring(prefab.LastIndexOf("/") + 1); //optimize?
         projectile.setValues(pos, mp, dmg, p);
         return projectile;
     }

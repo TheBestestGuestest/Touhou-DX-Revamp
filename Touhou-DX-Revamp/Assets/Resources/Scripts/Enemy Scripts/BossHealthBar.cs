@@ -4,16 +4,12 @@ using UnityEngine;
 
 public class BossHealthBar : MonoBehaviour {
     private Boss boss;
-    private Vector3 initScale;
+    private Vector3 initScale = new Vector3(1, 7.47f, 1);
     private Transform trans;
 
     void Awake() {
         trans = transform;
         boss = GetComponentInParent<Boss>() as Boss;
-    }
-
-    void OnEnable() {
-        initScale = trans.localScale;
     }
 
     public void updateBar() {

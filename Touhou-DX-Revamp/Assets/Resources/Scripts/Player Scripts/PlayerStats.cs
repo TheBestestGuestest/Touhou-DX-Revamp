@@ -30,6 +30,8 @@ public class PlayerStats : MonoBehaviour {
     private PlayerInputControl pic;
     private PlayerStatsCounter psc;
 
+    private string enemyProjectileTag = "Enemy Projectile";
+    private string dropTag = "Drop";
     void Awake() {
         pic = GetComponent<PlayerInputControl>();
         psc = GetComponent<PlayerStatsCounter>();
@@ -73,11 +75,11 @@ public class PlayerStats : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.tag.Equals("Enemy Projectile") && !isInvuln) {
+        if (collision.CompareTag(enemyProjectileTag) && !isInvuln) {
             isInvuln = true;
             StartCoroutine(takeDamage());
         }
-        if (collision.tag.Equals("Drop")) StartCoroutine(getDrop(collision));
+        if (collision.CompareTag(dropTag)) StartCoroutine(getDrop(collision));
     }
 
     public IEnumerator takeDamage() {

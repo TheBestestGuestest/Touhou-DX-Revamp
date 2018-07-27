@@ -19,13 +19,14 @@ public class CartesianPlane : MonoBehaviour {
 
     private int[] numOpInQueue = new int[5];  //same order, #5 is origin
     private bool[] isOpRunning = new bool[5];  //same order, #5 is origin
-
+    private WaitUntil[] waitDelay = new WaitUntil[5];
     void Awake() {
         SharedPlane = this;
         origin = transform;
     }
 
     void Start() {
+        for(int i = 0; i < waitDelay.Length; i++) waitDelay[i] = new WaitUntil(() => !isOpRunning[i]);
         origin.position = new Vector3(InGameDimentions.centerX, InGameDimentions.centerY, 0);
     }
 
@@ -51,7 +52,7 @@ public class CartesianPlane : MonoBehaviour {
         //queueing stuff
         int queue = ++numOpInQueue[p];
         while (queue > 0) {
-            yield return new WaitUntil(() => !isOpRunning[p]);
+            yield return waitDelay[p];  //does this actually work LOL
             queue--;
         }
         numOpInQueue[p]--;
@@ -79,7 +80,7 @@ public class CartesianPlane : MonoBehaviour {
         //queueing stuff
         int queue = ++numOpInQueue[p];
         while (queue > 0) {
-            yield return new WaitUntil(() => !isOpRunning[p]);
+            yield return waitDelay[p];
             queue--;
         }
         numOpInQueue[p]--;

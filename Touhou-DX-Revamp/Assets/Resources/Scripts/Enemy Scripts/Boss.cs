@@ -6,20 +6,25 @@ public class Boss : MonoBehaviour {
     [HideInInspector]
     public int maxHealth, currHealth;
 
-    private float shootingRate = 2f;
-    private float shootTimer;
-
+    private Transform trans;
     private BossHealthBar bhb;
     private BossBulletPatterns bbp;
 
-    private Transform trans;
+    private float shootingRate = 2f;
+    private float shootTimer;
 
+    private float functionRate = 7f;
+    private float functionTimer;
+
+    private Function testFunc;
+
+    private float moveRate = 3f;
+    private float moveTimer;
     private Vector3 destination;
     private Vector3 temp;
-    private float moveTimer;
-    private float moveRate = 3f;
 
     private string playerProjectileTag = "Player Projectile";
+
     void Awake() {
         trans = transform;
         bhb = GetComponentInChildren<BossHealthBar>() as BossHealthBar;
@@ -27,13 +32,21 @@ public class Boss : MonoBehaviour {
 
         gameObject.SetActive(false);
     }
+    void Start() {
+        System.Func<float, Vector3> sine = (theta) => {
+            return new Vector3(theta, 0.5f * (theta + Mathf.Sin(theta * 2.0f)));
+        };
+        Equation testEq = new Equation(EquationType.RECTANGULAR, "y = x + sin(x)", sine);
+        testFunc = Function.Create(trans, "Prefabs/Function", testEq, 100, 3f);
+    }
     void OnEnable() {
         GameQueue.SharedInstance.isQueueing = false;
 
-        maxHealth = 100;
+        maxHealth = 10000;
         currHealth = maxHealth;
         moveTimer = 0f;
         shootTimer = 0f;
+        functionTimer = 0f;
 
         destination = trans.position;
         temp = destination;
@@ -48,6 +61,12 @@ public class Boss : MonoBehaviour {
             StartCoroutine(bbp.runBulletPattern((int)(Random.value * bbp.getCount())));
         }
 
+        //functions
+        if (functionTimer >= functionRate) {
+            functionTimer = 0f;
+            testFunc.gameObject.SetActive(true);
+        }
+
         //movement
         if (moveTimer >= moveRate * 3f) {
             temp = destination;
@@ -57,6 +76,7 @@ public class Boss : MonoBehaviour {
         else if (moveTimer <= moveRate || !trans.position.Equals(destination)) trans.position = Vector3.Lerp(temp, destination, moveTimer / moveRate);
 
         shootTimer += Time.deltaTime;
+        functionTimer += Time.deltaTime;
         moveTimer += Time.deltaTime;
     }
 
@@ -74,6 +94,8 @@ public class Boss : MonoBehaviour {
             //Debug.Log(currHealth);
             if (!isAlive()) {
                 GameQueue.SharedInstance.isQueueing = true;
+                testFunc.destroyLines();
+                testFunc.gameObject.SetActive(false);
                 gameObject.SetActive(false);
             }
         }

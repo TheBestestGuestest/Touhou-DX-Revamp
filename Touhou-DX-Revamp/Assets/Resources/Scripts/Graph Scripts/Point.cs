@@ -27,7 +27,7 @@ public class Point : MonoBehaviour {
         if (CartesianPlane.SharedPlane.isGridShifting() || !trans.position.Equals(getPosition())) trans.position = getPosition();
     }
     public Vector3 getPosition() {
-        return eq.posRelativeToPlane(input, CartesianPlane.SharedPlane);
+        return eq.posRelativeToPlane(input);
     }
 
     private void OnBecameInvisible() {

@@ -8,5 +8,8 @@ public class PlayerBomb : MonoBehaviour {
         if (collision.CompareTag(enemyProjectileTag)) {
             ProjectilePool.SharedInstance.ReturnToPool(collision.gameObject);
         }
+        else {
+            //Debug.Log("bomb hit line");
+        }
     }
 }

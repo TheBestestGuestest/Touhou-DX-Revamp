@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vectrosity;
 
 public enum GridProperty {
     X_SCALE = 0,
     X_LENGTH = 1,
     Y_SCALE = 2,
-    Y_LENGTH = 3
+    Y_LENGTH = 3,
+    ORIGIN = 4
 };
 
 public class CartesianPlane : MonoBehaviour {
@@ -19,15 +21,45 @@ public class CartesianPlane : MonoBehaviour {
 
     private int[] numOpInQueue = new int[5];  //same order, #5 is origin
     private bool[] isOpRunning = new bool[5];  //same order, #5 is origin
-    private WaitUntil[] waitDelay = new WaitUntil[5];
+    private WaitUntil[][] waitDelay = new WaitUntil[2][];  //dont worry about why there 2 just know that IT WORKS
+
+    private int numGridLines = 15;
+    private int originLineIndex;
+    private VectorLine[][] gridLines = new VectorLine[2][];
+    private Canvas gridCanvas;
+    private Canvas functionCanvas;
+    public Canvas getFunctionCanvas() { return functionCanvas; }
+
     void Awake() {
         SharedPlane = this;
         origin = transform;
+        gridCanvas = GameObject.Find("Grid Canvas").GetComponent<Canvas>();
+        functionCanvas = GameObject.Find("Function Canvas").GetComponent<Canvas>();
+        originLineIndex = (numGridLines - 1) / 2;
     }
 
     void Start() {
-        for(int i = 0; i < waitDelay.Length; i++) waitDelay[i] = new WaitUntil(() => !isOpRunning[i]);
-        origin.position = new Vector3(InGameDimentions.centerX, InGameDimentions.centerY, 0);
+        for (int i = 0; i < 2; i++) {
+            waitDelay[i] = new WaitUntil[5];
+            for (int j = 0; j < waitDelay[i].Length; j++) waitDelay[i][j] = getWait(i, j);
+        }
+
+        origin.position = new Vector3(InGameDimentions.centerX, InGameDimentions.centerY, 3);
+
+        for (int i = 0; i < gridLines.Length; i++) {
+            gridLines[i] = new VectorLine[numGridLines];
+            for (int j = 0; j < numGridLines; j++) {
+                gridLines[i][j] = new VectorLine("GridLines", new List<Vector3>(), 4f, LineType.Continuous, Joins.None);
+                gridLines[i][j].SetCanvas(gridCanvas, false);
+                gridLines[i][j].color = j == originLineIndex ? Color.black : Color.gray;
+            }
+        }
+
+        drawGrid();
+    }
+    private WaitUntil getWait(int i, int j) {
+        if (i == 0) return new WaitUntil(() => !isOpRunning[j]);
+        else return new WaitUntil(() => isOpRunning[j]);
     }
 
     void Update() {
@@ -37,13 +69,33 @@ public class CartesianPlane : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha3)) StartCoroutine(setProperty(GridProperty.Y_SCALE, 2f, 1f));
         if (Input.GetKeyDown(KeyCode.Alpha4)) StartCoroutine(setProperty(GridProperty.Y_LENGTH, 2f, 1f));
 
-        int numLines = 10;
+        if (isGridShifting()) drawGrid();
+    }
+
+    public void drawGrid() {
         float xLength = gridProperties[(int)GridProperty.X_LENGTH];
         float yLength = gridProperties[(int)GridProperty.Y_LENGTH];
-        for (int i = -numLines; i <= numLines; i++)
-            Debug.DrawLine(origin.position + new Vector3(i * xLength, numLines * yLength), origin.position + new Vector3(i * xLength, -numLines * yLength), i == 0 ? Color.red : Color.blue);
-        for (int i = -numLines; i <= numLines; i++)
-            Debug.DrawLine(origin.position + new Vector3(numLines * xLength, i * yLength), origin.position + new Vector3(-numLines * xLength, i * yLength), i == 0 ? Color.red : Color.blue);
+        Vector3 point1;
+        Vector3 point2;
+
+        for (int i = 0; i < gridLines.Length; i++) {
+            for (int j = 0; j < numGridLines; j++) {
+                VectorLine line = gridLines[i][j];
+                line.points3.Clear();
+                int jIndex = j - originLineIndex;
+                if (i == 0) {
+                    point1 = origin.position + new Vector3(jIndex * xLength, originLineIndex * yLength, origin.position.z);
+                    point2 = origin.position + new Vector3(jIndex * xLength, -originLineIndex * yLength, origin.position.z);
+                }
+                else {
+                    point1 = origin.position + new Vector3(originLineIndex * xLength, jIndex * yLength, origin.position.z);
+                    point2 = origin.position + new Vector3(-originLineIndex * xLength, jIndex * yLength, origin.position.z);
+                }
+                line.points3.Add(point1);
+                line.points3.Add(point2);
+                line.Draw();
+            }
+        }
     }
 
     public IEnumerator shiftOrigin(Vector3 newOrigin, float time) {
@@ -52,14 +104,16 @@ public class CartesianPlane : MonoBehaviour {
         //queueing stuff
         int queue = ++numOpInQueue[p];
         while (queue > 0) {
-            yield return waitDelay[p];  //does this actually work LOL
+            yield return waitDelay[0][p];
             queue--;
+            if (queue > 0) yield return waitDelay[1][p];
         }
-        numOpInQueue[p]--;
         isOpRunning[p] = true;
+        --numOpInQueue[p];
 
         //shifting the var
         if (origin.position.Equals(newOrigin)) yield break;
+
         newOrigin.z = origin.position.z;
         Vector3 oldOrigin = origin.position;
         float timeElapsed = 0f;
@@ -80,8 +134,9 @@ public class CartesianPlane : MonoBehaviour {
         //queueing stuff
         int queue = ++numOpInQueue[p];
         while (queue > 0) {
-            yield return waitDelay[p];
+            yield return waitDelay[0][p];
             queue--;
+            if (queue > 0) yield return waitDelay[1][p];
         }
         numOpInQueue[p]--;
         isOpRunning[p] = true;
@@ -109,7 +164,10 @@ public class CartesianPlane : MonoBehaviour {
         return new Vector3(origin.position.x + (point.x * xRatio()), origin.position.y + (point.y * yRatio()), origin.position.z);
     }
     public float getDrawInterval() {
-        return 0.04f * xRatio();
+        return xRatio();
+    }
+    public Vector3 getOrigin() {
+        return origin.position;
     }
     public float getLeftEdge() {
         return (InGameDimentions.leftEdge - origin.position.x) / xRatio();

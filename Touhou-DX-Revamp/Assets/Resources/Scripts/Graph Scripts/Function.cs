@@ -1,29 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vectrosity;
 
-//function can be environmental functions, or summoned by boss functions
-//2 parts: queued up and in game
-//boss can spawn right on queue to summon it
 public class Function : MonoBehaviour {
     private Transform trans;
     private Equation eq;
-    private static Vector3 disposedPos = new Vector3(-10, 0, 0);
 
-    private float drawTimer;
-    private float drawRate = 10f;
+    private float start;
+    private float end;
+    private int currDiv;
+    private int subdivisions;
+    private float drawTime;
 
-    public float start;
-    public float end;
-    public float interval;
-    public float drawTime;
+    private string currProcess = null;
+    private string rootProcess = null;
 
-    public bool isActive = true;  //TODO
+    private VectorLine visualLine;
+    private VectorLine colliderLine;
+    private List<Vector3> points;
 
-    public static Function Create(string prefab, Equation equation) {
-        Function func = (Instantiate((GameObject)Resources.Load(prefab), disposedPos, Quaternion.identity) as GameObject).GetComponent<Function>();
-        func.name = prefab.Substring(prefab.LastIndexOf("/") + 1);
+    public static Function Create(Transform trans, string prefab, Equation equation, int subdiv, float drawTime, float start = 0, float end = 0) {
+        GameObject obj = Instantiate((GameObject)Resources.Load(prefab), CartesianPlane.SharedPlane.getOrigin(), Quaternion.identity, trans) as GameObject;
+        Function func = obj.GetComponent<Function>();
+        func.name = equation.name;
         func.eq = equation;
+        func.subdivisions = subdiv;
+        func.drawTime = drawTime;
+        func.start = start;
+        func.end = end;
         return func;
     }
 
@@ -31,54 +36,125 @@ public class Function : MonoBehaviour {
         trans = transform;
         gameObject.SetActive(false);
     }
-    void OnEnable() {
-        drawTimer = 10f;
-        //testing purposes only
-        System.Func<float, dynamic> temp = (theta) => {
-            float r = 4 * Mathf.Cos(3 * theta);
-            return new Vector2(r * Mathf.Cos(theta), r * Mathf.Sin(theta));
-        };
-        eq = new Equation(EquationType.POLAR, "r = 4cos(3theta)", temp);
-        start = 0;
-        end = Mathf.PI;
-        interval = 0.01f;
-        //testing purposes only
-        
-        EquationList.SharedInstance.addFunction(this);
-        //TO-DO: drawing and processing
-        StartCoroutine(drawFunction());
-    }
-    /*
-    void Update() {
-        
-    }
-    */
-    public IEnumerator drawFunction() {
-        //make this DEPENDENT ON TIME.DELTATIME
-        if (eq.type == EquationType.RECTANGULAR) {
-            for (float i = CartesianPlane.SharedPlane.getLeftEdge(); i < CartesianPlane.SharedPlane.getRightEdge(); i += CartesianPlane.SharedPlane.getDrawInterval()) {
-                Point.Create("Prefabs/Point", eq, i, drawRate / 2);
-                yield return null;
-            }
+    private void initLines() {
+        if (visualLine == null && colliderLine == null) {
+            points = new List<Vector3>();
+            visualLine = new VectorLine(eq.name + " VISUAL", points, 10, LineType.Continuous, Joins.Fill);
+            visualLine.SetCanvas(CartesianPlane.SharedPlane.getFunctionCanvas(), false);
+            visualLine.color = Color.black;
+
+            colliderLine = new VectorLine(eq.name + " COLLIDER", points, 10, LineType.Continuous, Joins.Fill);
+            colliderLine.SetCanvas(CartesianPlane.SharedPlane.getFunctionCanvas(), true);
+            colliderLine.color = Color.clear;
+            colliderLine.trigger = true;
+            colliderLine.collider = false;
+            colliderLine.rectTransform.gameObject.tag = "Function";
         }
-        else {
-            for (float i = start; i < end; i += interval) {
-                Point.Create("Prefabs/Point", eq, i, drawRate / 2);
-                yield return null;
-            }
+    }
+
+    void OnEnable() {
+        //testing purposes only
+        if (eq == null) {
+            System.Func<float, Vector3> temp = (theta) => {
+                //float r = 4 * Mathf.Cos(3 * theta)
+                float r = 1 - Mathf.Sin(theta);
+                return new Vector3(r * Mathf.Cos(theta), r * Mathf.Sin(theta));
+            };
+            eq = new Equation(EquationType.POLAR, "r = 4cos(3theta)", temp);
+            start = 0f;
+            end = 2*Mathf.PI;
+            subdivisions = 100;
+            drawTime = 3f;
+        }
+        //testing purposes only
+        initLines();
+
+        //initializing equation
+        switch (eq.type) {
+            case EquationType.RECTANGULAR:
+                rootProcess = "x = ";
+                break;
+            case EquationType.PARAMETRIC:
+                rootProcess = "t = ";
+                break;
+            case EquationType.POLAR:
+                rootProcess = "theta = ";
+                break;
         }
 
-        gameObject.SetActive(false);
+        //drawing and processing
+        EquationList.SharedInstance.addFunction(this);
+        StartCoroutine(drawFunction());
+    }
+
+    void Update() {
+        if (CartesianPlane.SharedPlane.isGridShifting()) {
+            for (int i = 0; i < points.Count; i++) {
+                float input = start + (end - start) * i / subdivisions;
+                points[i] = eq.posRelativeToPlane(input);
+            }
+            drawLines();
+        }
+    }
+
+    public IEnumerator drawFunction() {
+        currDiv = 0;
+
+        for (float drawTimer = 0f; currDiv <= subdivisions; drawTimer += Time.deltaTime) {
+            //spanning the grid if no start and end points are provided
+            if (start == 0 && end == 0) {
+                start = CartesianPlane.SharedPlane.getLeftEdge();
+                end = CartesianPlane.SharedPlane.getRightEdge();  //MAKE IT SO FOR RECTS YOU SPAWN THE LINE THATS HIDDEN (SO WHEN YOU MOVE ITS NOT JEBAITED) but draw the visible parts
+            }
+
+            //makes up for the missing points
+            float timeRatio = Mathf.Min(drawTimer / drawTime * subdivisions, subdivisions);
+
+            for (; currDiv <= timeRatio; currDiv++) {
+                float input = start + (end - start) * currDiv / subdivisions;
+                currProcess = string.Concat(rootProcess, input);
+
+                EquationList.SharedInstance.showEqList();
+                points.Add(eq.posRelativeToPlane(input));
+            }
+
+            if (!colliderLine.collider && points.Count > 1) colliderLine.collider = true;
+
+            drawLines();
+            yield return null;
+        }
+
+        currProcess = "Inactive";
+        EquationList.SharedInstance.showEqList();
+        yield return new WaitForSeconds(3);
+        StartCoroutine(doProcess());
     }
 
     public virtual IEnumerator doProcess() {
-        yield return null;
+        while (points.Count > 0) {
+            points.RemoveAt(0);
+
+            if (points.Count <= 1 && colliderLine.collider) colliderLine.collider = false;
+
+            drawLines();
+            yield return null;
+        }
+        gameObject.SetActive(false);
+    }
+
+    private void drawLines() {
+        visualLine.Draw();
+        colliderLine.Draw();
     }
 
     public string getEqName() {
         return eq.name;
     }
     public string getCurrProcess() {
-        return "inactive";
+        return currProcess == null ? "Inactive" : currProcess;
+    }
+    public void destroyLines() {
+        VectorLine.Destroy(ref visualLine);
+        VectorLine.Destroy(ref colliderLine);
     }
 }

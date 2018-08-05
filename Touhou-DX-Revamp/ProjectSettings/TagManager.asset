@@ -8,6 +8,7 @@ TagManager:
   - Enemy Projectile
   - Enemy
   - Drop
+  - Function
   layers:
   - Default
   - TransparentFX
@@ -45,11 +46,17 @@ TagManager:
   - name: Background
     uniqueID: 341968789
     locked: 0
-  - name: Enemies
-    uniqueID: 3863458183
+  - name: Grid
+    uniqueID: 890141449
     locked: 0
   - name: Player
     uniqueID: 3624303717
+    locked: 0
+  - name: Functions
+    uniqueID: 2545085543
+    locked: 0
+  - name: Enemies
+    uniqueID: 3863458183
     locked: 0
   - name: Projectiles
     uniqueID: 3243549619

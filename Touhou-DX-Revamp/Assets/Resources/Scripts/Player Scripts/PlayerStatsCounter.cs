@@ -4,5 +4,22 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerStatsCounter : MonoBehaviour {
-    public Text lives, bombs, gauge, power;
+    public Text gauge, power;
+    public Slider powerGauge;
+
+    public GameObject[] lifeIcons;
+    public GameObject[] bombIcons;
+
+    public void updateLives(int num){
+        if(num >= lifeIcons.Length) return;
+        int i = 0;
+        for(; i < num; i++) lifeIcons[i].SetActive(true);
+        for(; i < lifeIcons.Length; i++) lifeIcons[i].SetActive(false);
+    }
+    public void updateBombs(int num){
+        if(num >= bombIcons.Length) return;
+        int i = 0;
+        for(; i < num; i++) bombIcons[i].SetActive(true);
+        for(; i < bombIcons.Length; i++) bombIcons[i].SetActive(false);
+    }
 }

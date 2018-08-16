@@ -36,7 +36,7 @@ public class Projectile : MonoBehaviour {
     }
     public void Update() {
         totalTime += Time.deltaTime;
-        trans.position = path(totalTime, spawnPos);
+        trans.position = path(totalTime, spawnPos);  //need a DESTROY AFTER X SEC or ON INVIS
     }
 
     private void OnBecameInvisible() {

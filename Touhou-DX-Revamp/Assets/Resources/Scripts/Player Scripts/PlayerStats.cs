@@ -48,12 +48,11 @@ public class PlayerStats : MonoBehaviour {
         maxBombs = 3;
         currLives = maxLives;
         currBombs = maxBombs;
+        psc.updateLives(currLives);
+        psc.updateBombs(currBombs);
 
         speed = 5;
         isInvuln = false;
-
-        psc.lives.text = currLives.ToString();
-        psc.bombs.text = currBombs.ToString();
     }
 
     //void Update() {}
@@ -70,12 +69,12 @@ public class PlayerStats : MonoBehaviour {
 
     public IEnumerator takeDamage() {
         currLives--;
-        psc.lives.text = currLives.ToString();
+        psc.updateLives(currLives);
 
         if (isAlive()) {
             currBombs = maxBombs + 1;
             pic.useBomb();
-            psc.bombs.text = currBombs.ToString();
+            psc.updateBombs(currBombs);
 
             trans.position = SPAWN_LOC;
             powerGauge = 0;
@@ -106,7 +105,8 @@ public class PlayerStats : MonoBehaviour {
             incrementPowerLevel(1);
         }
 
-        psc.gauge.text = powerGauge.ToString();
+        psc.gauge.text = powerGauge.ToString() + "/" + powerReqs[Mathf.Min(powerLevel + 1, 4)];
+        psc.powerGauge.value = (float)powerGauge/powerReqs[Mathf.Min(powerLevel + 1, 4)];
     }
     private void incrementPowerLevel(int change) {  //will balance later
         powerLevel = Mathf.Max(powerLevel + change, 0);

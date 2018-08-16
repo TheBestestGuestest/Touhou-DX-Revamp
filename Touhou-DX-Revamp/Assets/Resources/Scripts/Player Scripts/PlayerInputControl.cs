@@ -119,13 +119,11 @@ public class PlayerBulletCache {
         ProjectilePool.SharedInstance.GetPooledProjectile(bulletPrefab, new Vector3(pos.x + 0.25f, pos.y + 0.5f, pos.z), straightShot, ps.bulletDamage, isPiercing);
     }
     public void useBomb(PlayerStats ps, PlayerStatsCounter psc) {
-        ps.currBombs--;
-        psc.bombs.text = ps.currBombs.ToString();
+        psc.updateBombs(--ps.currBombs);
 
         string prefab = bombPrefab;
         bool isPiercing = ps.powerLevel >= 3;
         for (int i = 0; i < bombPath[ps.powerLevel].Length; i++)
             ProjectilePool.SharedInstance.GetPooledProjectile(prefab, new Vector3(trans.position.x, trans.position.y, trans.position.z), bombPath[ps.powerLevel][i], ps.bombDamage, isPiercing);
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Vectrosity;
 
 public class Function : MonoBehaviour {
@@ -53,20 +54,6 @@ public class Function : MonoBehaviour {
     }
 
     void OnEnable() {
-        //testing purposes only
-        if (eq == null) {
-            System.Func<float, Vector3> temp = (theta) => {
-                //float r = 4 * Mathf.Cos(3 * theta)
-                float r = 1 - Mathf.Sin(theta);
-                return new Vector3(r * Mathf.Cos(theta), r * Mathf.Sin(theta));
-            };
-            eq = new Equation(EquationType.POLAR, "r = 4cos(3theta)", temp);
-            start = 0f;
-            end = 2*Mathf.PI;
-            subdivisions = 100;
-            drawTime = 3f;
-        }
-        //testing purposes only
         initLines();
 
         //initializing equation
@@ -157,4 +144,8 @@ public class Function : MonoBehaviour {
         VectorLine.Destroy(ref visualLine);
         VectorLine.Destroy(ref colliderLine);
     }
+}
+
+public class Process{
+
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Queueable : MonoBehaviour {
+public class QueueableObject : MonoBehaviour {
     public GameObject objectInQueue;
     public Vector3 spawnPos = new Vector3(-1.83333f, 3f, 0f);
 

@@ -86,8 +86,8 @@ public class PlayerBulletCache {
     private MovePath[][] bombPath;
     private MovePath straightShot;
 
-    private string bulletPrefab = "Prefabs/PlayerBullet";
-    private string bombPrefab = "Prefabs/PlayerBomb";
+    private string bulletPrefab = "Prefabs/Projectiles/PlayerBullet";
+    private string bombPrefab = "Prefabs/Projectiles/PlayerBomb";
 
     public PlayerBulletCache(Transform transform) {
         trans = transform;

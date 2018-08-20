@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour {
     public int powerLevel;
+    private int getNextPowerLevel() { return Mathf.Min(powerLevel + 1, 4); }
     public int powerGauge;
     private int[] powerReqs;
+    private int getCurrPowerReq() { return powerReqs[Mathf.Min(powerLevel + 1, 4)]; }
 
     public int speed;
     public float scoreMultiplier;
@@ -32,13 +34,14 @@ public class PlayerStats : MonoBehaviour {
     private string enemyProjectileTag = "Enemy Projectile";
     private string functionTag = "Function";  //enum?
     private string dropTag = "Drop";
+
     void Awake() {
         pic = GetComponent<PlayerInputControl>();
         psc = GetComponent<PlayerStatsCounter>();
         trans = transform;
     }
     void Start() {
-        powerReqs = new int[] { 0, 100, 200, 300, 400 };
+        powerReqs = new int[] { 0, 100, 100, 100, 100 };
         powerLevel = 0;
         powerGauge = 0;
         incrementPowerLevel(0);
@@ -54,8 +57,6 @@ public class PlayerStats : MonoBehaviour {
         speed = 5;
         isInvuln = false;
     }
-
-    //void Update() {}
 
     private void OnTriggerStay2D(Collider2D collision) {
         if (!isInvuln && (collision.CompareTag(enemyProjectileTag) || collision.CompareTag(functionTag))) {
@@ -77,13 +78,14 @@ public class PlayerStats : MonoBehaviour {
             psc.updateBombs(currBombs);
 
             trans.position = SPAWN_LOC;
-            powerGauge = 0;
+            incrementPowerGauge(-powerReqs[getNextPowerLevel()]);
 
             yield return new WaitForSeconds(2f);
             isInvuln = false;
         }
         else {
             Destroy(gameObject);
+            Main.SharedInstance.GameOver();
         }
     }
 
@@ -99,14 +101,19 @@ public class PlayerStats : MonoBehaviour {
     public void incrementPowerGauge(int change) {
         //LATER (POWER GAUGE DRAIN)
         powerGauge = Mathf.Max(powerGauge + change, 0);
-        if (powerLevel == 4) powerGauge = powerReqs[powerLevel];
-        else if (powerGauge > powerReqs[powerLevel + 1]) {
-            powerGauge -= powerReqs[powerLevel + 1];
-            incrementPowerLevel(1);
+        if (change > 0) {
+            if (powerGauge >= getCurrPowerReq()) {
+                if (powerLevel < 3) powerGauge -= getCurrPowerReq();
+                else powerGauge = getCurrPowerReq();
+
+                if (powerLevel < 4) incrementPowerLevel(1);
+            }
+        }
+        else if (powerLevel == 4) {
+            incrementPowerLevel(-1);
         }
 
-        psc.gauge.text = powerGauge.ToString() + "/" + powerReqs[Mathf.Min(powerLevel + 1, 4)];
-        psc.powerGauge.value = (float)powerGauge/powerReqs[Mathf.Min(powerLevel + 1, 4)];
+        psc.updatePowerGauge(powerLevel, powerGauge, getCurrPowerReq());
     }
     private void incrementPowerLevel(int change) {  //will balance later
         powerLevel = Mathf.Max(powerLevel + change, 0);
@@ -142,7 +149,8 @@ public class PlayerStats : MonoBehaviour {
                 bombDamage = 1;
                 break;
         }
-        psc.power.text = Convert.ToString(powerLevel + 1);
+
+        psc.updatePowerGauge(powerLevel, powerGauge, getCurrPowerReq());
     }
 
     public bool isAlive() {

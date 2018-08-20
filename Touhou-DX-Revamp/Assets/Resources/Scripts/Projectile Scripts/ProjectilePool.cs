@@ -57,6 +57,24 @@ public class ProjectilePool : MonoBehaviour {
         if (isProjectile(obj) != null) obj.SetActive(false);
     }
 
+    //maybe only enemy projectiles???????
+    public void ReturnAllProjectilesToPool() {
+        foreach (KeyValuePair<string, List<GameObject>> entry in pooledProjectiles) {
+            List<GameObject> pool = entry.Value;
+            foreach (GameObject pp in pool) {
+                pp.SetActive(false);
+            }
+        }
+    }
+    public void ReturnAllDropsToPool() {
+        foreach (KeyValuePair<string, List<GameObject>> entry in pooledDrops) {
+            List<GameObject> pool = entry.Value;
+            foreach (GameObject pd in pool) {
+                pd.SetActive(false);
+            }
+        }
+    }
+
     public Projectile isProjectile(GameObject obj) {
         Projectile projectile = obj.GetComponent<Projectile>();
         if (projectile == null) throw new System.Exception("Object is NOT a Projectile!");

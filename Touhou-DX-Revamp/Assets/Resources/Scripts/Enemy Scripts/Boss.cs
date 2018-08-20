@@ -9,14 +9,14 @@ public class Boss : MonoBehaviour {
     private Transform trans;
     private BossHealthBar bhb;
     private BossBulletPatterns bbp;
+    private BossFunctions bf;
 
-    private float shootingRate = 2f;
+    private float shootingRate = 1.75f;
     private float shootTimer;
 
-    private float functionRate = 7f;
-    private float functionTimer;
 
-    private Function testFunc;
+    private float functionRate = 6f;
+    private float functionTimer;
 
     private float moveRate = 3f;
     private float moveTimer;
@@ -29,16 +29,12 @@ public class Boss : MonoBehaviour {
         trans = transform;
         bhb = GetComponentInChildren<BossHealthBar>() as BossHealthBar;
         bbp = new BossBulletPatterns(trans);
+        bf = GetComponentInChildren<BossFunctions>() as BossFunctions;
+        bf.Start();
 
         gameObject.SetActive(false);
     }
-    void Start() {
-        System.Func<float, Vector3> sine = (theta) => {
-            return new Vector3(theta, 0.5f * (theta + Mathf.Sin(theta * 2.0f)));
-        };
-        Equation testEq = new Equation(EquationType.RECTANGULAR, "y = x + sin(x)", sine);
-        testFunc = Function.Create(trans, "Prefabs/Function", testEq, 100, 3f);
-    }
+
     void OnEnable() {
         GameQueue.SharedInstance.isQueueing = false;
 
@@ -64,7 +60,7 @@ public class Boss : MonoBehaviour {
         //functions
         if (functionTimer >= functionRate) {
             functionTimer = 0f;
-            testFunc.gameObject.SetActive(true);
+            bf.activateFunction(-1);
         }
 
         //movement
@@ -89,13 +85,11 @@ public class Boss : MonoBehaviour {
             bhb.updateBar();
             if (!p.isPiercing) ProjectilePool.SharedInstance.ReturnToPool(collision.gameObject);
 
-            ProjectilePool.SharedInstance.GetPooledDrop("Prefabs/Drop", trans.position + new Vector3(Random.value - 0.5f, Random.value - 0.5f, 0) * 0.6f, null, 0.07f, (Random.value - 0.5f) * 300 + 90);
+            ProjectilePool.SharedInstance.GetPooledDrop("Prefabs/Projectiles/Drop", trans.position + new Vector3(Random.value - 0.5f, Random.value - 0.5f, 0) * 0.6f, null, 0.07f, (Random.value - 0.5f) * 300 + 90);
 
-            //Debug.Log(currHealth);
             if (!isAlive()) {
                 GameQueue.SharedInstance.isQueueing = true;
-                testFunc.destroyLines();
-                testFunc.gameObject.SetActive(false);
+                bf.deactivateAll();
                 gameObject.SetActive(false);
             }
         }
@@ -119,9 +113,9 @@ public class BossBulletPatterns {
     private WaitForSeconds swirlWait = new WaitForSeconds(0.5f);
     private WaitForSeconds sweepWait = new WaitForSeconds(0.2f);
 
-    private string circlePrefab = "Prefabs/BossBomb";
-    private string swirlPrefab = "Prefabs/BossSwirl";
-    private string sweepPrefab = "Prefabs/BossPotato";
+    private string circlePrefab = "Prefabs/Projectiles/BossBomb";
+    private string swirlPrefab = "Prefabs/Projectiles/BossSwirl";
+    private string sweepPrefab = "Prefabs/Projectiles/BossPotato";
 
     private MovePath circlePattern(int i, int j) {
         return delegate (float t, Vector3 pos) {

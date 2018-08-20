@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,5 +22,10 @@ public class PlayerStatsCounter : MonoBehaviour {
         int i = 0;
         for(; i < num; i++) bombIcons[i].SetActive(true);
         for(; i < bombIcons.Length; i++) bombIcons[i].SetActive(false);
+    }
+    public void updatePowerGauge(int pow, int currG, int maxG) {
+        power.text = Convert.ToString(pow + 1);
+        gauge.text = currG + "/" + maxG;
+        powerGauge.value = (float)currG / maxG;
     }
 }

@@ -163,9 +163,6 @@ public class CartesianPlane : MonoBehaviour {
     public Vector3 pointRelativeToOrigin(Vector3 point) {
         return new Vector3(origin.position.x + (point.x * xRatio()), origin.position.y + (point.y * yRatio()), origin.position.z);
     }
-    public float getDrawInterval() {
-        return xRatio();
-    }
     public Vector3 getOrigin() {
         return origin.position;
     }

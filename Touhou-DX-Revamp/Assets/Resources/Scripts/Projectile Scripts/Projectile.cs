@@ -11,20 +11,21 @@ public class Projectile : MonoBehaviour {
     public Transform trans;
     public MovePath path;
     public float totalTime;
-
+    public float destroyTime = -1;
     private Vector3 spawnPos;
-    
-    public static Projectile Create(string prefab, Vector3 pos, MovePath mp, int dmg = 0, bool p = false) {
+
+    public static Projectile Create(string prefab, Vector3 pos, MovePath mp, int dmg = 0, float t = -1, bool p = false) {
         Projectile projectile = (Instantiate((GameObject)Resources.Load(prefab), pos, Quaternion.identity, ProjectilePool.SharedInstance.transform) as GameObject).GetComponent<Projectile>();
         projectile.name = prefab.Substring(prefab.LastIndexOf("/") + 1); //optimize?
-        projectile.setValues(pos, mp, dmg, p);
+        projectile.setValues(pos, mp, dmg, t, p);
         return projectile;
     }
-    public void setValues(Vector3 pos, MovePath mp, int dmg, bool p) {
+    public void setValues(Vector3 pos, MovePath mp, int dmg, float t, bool p) {
         spawnPos = pos;
         trans.position = pos;
         path = mp;
         damage = dmg;
+        destroyTime = t;
         isPiercing = p;
     }
 
@@ -37,10 +38,11 @@ public class Projectile : MonoBehaviour {
     public void Update() {
         totalTime += Time.deltaTime;
         trans.position = path(totalTime, spawnPos);  //need a DESTROY AFTER X SEC or ON INVIS
+        if (destroyTime != -1 && totalTime >= destroyTime) ProjectilePool.SharedInstance.ReturnToPool(gameObject);
     }
 
     private void OnBecameInvisible() {
-        ProjectilePool.SharedInstance.ReturnToPool(gameObject);
+        if (destroyTime == -1) ProjectilePool.SharedInstance.ReturnToPool(gameObject);
     }
 }
 

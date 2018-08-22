@@ -41,7 +41,7 @@ public class PlayerStats : MonoBehaviour {
         trans = transform;
     }
     void Start() {
-        powerReqs = new int[] { 0, 100, 100, 100, 100 };
+        powerReqs = new int[] { 0, 250, 500, 750, 1000 };
         powerLevel = 0;
         powerGauge = 0;
         incrementPowerLevel(0);

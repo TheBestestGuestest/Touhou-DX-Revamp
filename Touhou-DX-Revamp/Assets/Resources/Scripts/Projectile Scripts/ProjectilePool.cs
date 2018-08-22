@@ -17,20 +17,20 @@ public class ProjectilePool : MonoBehaviour {
         pooledDrops = new Dictionary<string, List<GameObject>>();
     }
 
-    public GameObject GetPooledProjectile(string prefab, Vector3 pos, MovePath mp, int dmg = 0, bool p = false) {
+    public GameObject GetPooledProjectile(string prefab, Vector3 pos, MovePath mp, int dmg = 0, float t = -1, bool p = false) {
         if (!pooledProjectiles.ContainsKey(prefab)) pooledProjectiles.Add(prefab, new List<GameObject>());
         List<GameObject> pool = pooledProjectiles[prefab];
 
         foreach (GameObject pp in pool) {
             if (!pp.activeInHierarchy) {
                 Projectile projectile = isProjectile(pp);
-                projectile.setValues(pos, mp, dmg, p);
+                projectile.setValues(pos, mp, dmg, t, p);
                 pp.SetActive(true);
                 return pp;
             }
         }
 
-        GameObject obj = Projectile.Create(prefab, pos, mp, dmg, p).gameObject;
+        GameObject obj = Projectile.Create(prefab, pos, mp, dmg, t, p).gameObject;
         pool.Add(obj);
         return obj;
     }

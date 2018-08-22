@@ -15,7 +15,7 @@ public class Boss : MonoBehaviour {
     private float shootTimer;
 
 
-    private float functionRate = 6f;
+    private float functionRate = 7f;
     private float functionTimer;
 
     private float moveRate = 3f;
@@ -155,7 +155,7 @@ public class BossBulletPatterns {
         for (int i = 0; i < 4; i++) {
             dir *= -1;
             for (int j = 0; j < 16; j++) {
-                ProjectilePool.SharedInstance.GetPooledProjectile(swirlPrefab, trans.position, cachedSwirlPattern[(dir + 1) / 2][i][j]);
+                ProjectilePool.SharedInstance.GetPooledProjectile(swirlPrefab, trans.position, cachedSwirlPattern[(dir + 1) / 2][i][j], 0, 6, false);
             }
             yield return swirlWait;
         }

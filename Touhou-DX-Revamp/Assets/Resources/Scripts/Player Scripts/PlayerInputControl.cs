@@ -105,7 +105,7 @@ public class PlayerBulletCache {
         bombPath = new MovePath[5][];
         for (int i = 0; i < bombPath.Length; i++) {
             bombPath[i] = new MovePath[16];
-            for(int j = 0; j < bombPath[i].Length; j++) {
+            for (int j = 0; j < bombPath[i].Length; j++) {
                 int spd = i > 2 ? 2 : 5;
                 bombPath[i][j] = bombLine(j, bombPath[i].Length, spd);
             }
@@ -115,8 +115,8 @@ public class PlayerBulletCache {
     public void useShot(PlayerStats ps) {
         Vector3 pos = trans.position;
         bool isPiercing = ps.powerLevel >= 4;
-        ProjectilePool.SharedInstance.GetPooledProjectile(bulletPrefab, new Vector3(pos.x - 0.25f, pos.y + 0.5f, pos.z), straightShot, ps.bulletDamage, isPiercing);
-        ProjectilePool.SharedInstance.GetPooledProjectile(bulletPrefab, new Vector3(pos.x + 0.25f, pos.y + 0.5f, pos.z), straightShot, ps.bulletDamage, isPiercing);
+        ProjectilePool.SharedInstance.GetPooledProjectile(bulletPrefab, new Vector3(pos.x - 0.25f, pos.y + 0.5f, pos.z), straightShot, ps.bulletDamage, -1, isPiercing);
+        ProjectilePool.SharedInstance.GetPooledProjectile(bulletPrefab, new Vector3(pos.x + 0.25f, pos.y + 0.5f, pos.z), straightShot, ps.bulletDamage, -1, isPiercing);
     }
     public void useBomb(PlayerStats ps, PlayerStatsCounter psc) {
         psc.updateBombs(--ps.currBombs);
@@ -124,6 +124,6 @@ public class PlayerBulletCache {
         string prefab = bombPrefab;
         bool isPiercing = ps.powerLevel >= 3;
         for (int i = 0; i < bombPath[ps.powerLevel].Length; i++)
-            ProjectilePool.SharedInstance.GetPooledProjectile(prefab, new Vector3(trans.position.x, trans.position.y, trans.position.z), bombPath[ps.powerLevel][i], ps.bombDamage, isPiercing);
+            ProjectilePool.SharedInstance.GetPooledProjectile(prefab, new Vector3(trans.position.x, trans.position.y, trans.position.z), bombPath[ps.powerLevel][i], ps.bombDamage, -1, isPiercing);
     }
 }

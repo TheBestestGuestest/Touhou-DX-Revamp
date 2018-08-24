@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerStats : MonoBehaviour {
+    public int maxPowerLevel;
     public int powerLevel;
-    private int getNextPowerLevel() { return Mathf.Min(powerLevel + 1, 4); }
+    private int getNextPowerLevel() { return Mathf.Min(powerLevel + 1, maxPowerLevel); }
     public int powerGauge;
     private int[] powerReqs;
-    private int getCurrPowerReq() { return powerReqs[Mathf.Min(powerLevel + 1, 4)]; }
+    private int getCurrPowerReq() { return powerReqs[getNextPowerLevel()]; }
 
     public int speed;
     public float scoreMultiplier;
@@ -41,7 +42,8 @@ public class PlayerStats : MonoBehaviour {
         trans = transform;
     }
     void Start() {
-        powerReqs = new int[] { 0, 250, 500, 750, 1000 };
+        maxPowerLevel = 4;  //CHANGE THIS LATER WHEN POWER LEVELS ARE UNLOCKABLE (MAKE SURE ITS NEVER OVER 4)
+        powerReqs = new int[] { 0, 10, 10, 10, 20 };
         powerLevel = 0;
         powerGauge = 0;
         incrementPowerLevel(0);
@@ -103,14 +105,16 @@ public class PlayerStats : MonoBehaviour {
         powerGauge = Mathf.Max(powerGauge + change, 0);
         if (change > 0) {
             if (powerGauge >= getCurrPowerReq()) {
-                if (powerLevel < 3) powerGauge -= getCurrPowerReq();
+                if (powerLevel < maxPowerLevel - 1) {
+                    powerGauge -= getCurrPowerReq();
+                }
                 else powerGauge = getCurrPowerReq();
-
-                if (powerLevel < 4) incrementPowerLevel(1);
+                if (powerLevel < maxPowerLevel) incrementPowerLevel(1);
             }
         }
-        else if (powerLevel == 4) {
+        else if (powerLevel == maxPowerLevel) {
             incrementPowerLevel(-1);
+            powerGauge = 0;
         }
 
         psc.updatePowerGauge(powerLevel, powerGauge, getCurrPowerReq());

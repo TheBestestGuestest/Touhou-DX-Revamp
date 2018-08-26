@@ -184,8 +184,8 @@ public class Function : MonoBehaviour {
         return currProcess == null ? "Inactive" : currProcess;
     }
     public void destroyLines() {
-        VectorLine.Destroy(visualLines);
-        VectorLine.Destroy(colliderLines);
+        if (visualLines != null) VectorLine.Destroy(visualLines);
+        if (colliderLines != null) VectorLine.Destroy(colliderLines);
     }
 }
 
@@ -197,7 +197,7 @@ public enum Process {
     LRAM,
     RRAM,
     MRAM,
-    TRAPEZ,
+    TRAPAZ,
     SIMPS,
     INTEG,
     MEAN_VAL,

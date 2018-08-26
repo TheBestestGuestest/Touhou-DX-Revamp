@@ -85,12 +85,15 @@ public class Boss : MonoBehaviour {
             bhb.updateBar();
             if (!p.isPiercing) ProjectilePool.SharedInstance.ReturnToPool(collision.gameObject);
 
-            ProjectilePool.SharedInstance.GetPooledDrop("Prefabs/Projectiles/Drop", trans.position + new Vector3(Random.value - 0.5f, Random.value - 0.5f, 0) * 0.6f, null, 0.07f, (Random.value - 0.5f) * 300 + 90);
-
             if (!isAlive()) {
+                StartCoroutine(bbp.makeDrops(100));  //WHY
                 GameQueue.SharedInstance.isQueueing = true;
                 bf.deactivateAll();
                 gameObject.SetActive(false);
+                Score.SharedInstance.changeScore(10000);
+            }
+            else {
+                StartCoroutine(bbp.makeDrops(1));
             }
         }
     }
@@ -116,6 +119,7 @@ public class BossBulletPatterns {
     private string circlePrefab = "Prefabs/Projectiles/BossBomb";
     private string swirlPrefab = "Prefabs/Projectiles/BossSwirl";
     private string sweepPrefab = "Prefabs/Projectiles/BossPotato";
+    private string dropPrefab = "Prefabs/Projectiles/Drop";
 
     private MovePath circlePattern(int i, int j) {
         return delegate (float t, Vector3 pos) {
@@ -211,6 +215,13 @@ public class BossBulletPatterns {
     public IEnumerator runBulletPattern(int i) {
         if (i >= 0 && i < bulletPatterns.Count) return bulletPatterns[i]();
         throw new System.Exception();
+    }
+    public IEnumerator makeDrops(int num) {
+        for (int i = 0; i < num; i++) {
+            Debug.Log("hi");
+            ProjectilePool.SharedInstance.GetPooledDrop(dropPrefab, trans.position + new Vector3(Random.value - 0.5f, Random.value - 0.5f, 0) * 0.6f, null, 0.07f, (Random.value - 0.5f) * 300 + 90);
+            yield return null;
+        }
     }
     public int getCount() {
         return bulletPatterns.Count;

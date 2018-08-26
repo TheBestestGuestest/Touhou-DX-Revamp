@@ -43,7 +43,7 @@ public class PlayerStats : MonoBehaviour {
     }
     void Start() {
         maxPowerLevel = 4;  //CHANGE THIS LATER WHEN POWER LEVELS ARE UNLOCKABLE (MAKE SURE ITS NEVER OVER 4)
-        powerReqs = new int[] { 0, 10, 10, 10, 20 };
+        powerReqs = new int[] { 0, 100, 200, 300, 400 };
         powerLevel = 0;
         powerGauge = 0;
         incrementPowerLevel(0);
@@ -96,6 +96,8 @@ public class PlayerStats : MonoBehaviour {
 
         //powergauge stuff
         incrementPowerGauge(1);
+
+        Score.SharedInstance.changeScore(1 * scoreMultiplier);
 
         yield return null;
     }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ProjectilePool : MonoBehaviour {
@@ -53,7 +52,6 @@ public class ProjectilePool : MonoBehaviour {
     }
 
     public void ReturnToPool(GameObject obj) {
-        //check if the obj actually exists?
         if (isProjectile(obj) != null) obj.SetActive(false);
     }
 
@@ -62,7 +60,7 @@ public class ProjectilePool : MonoBehaviour {
         foreach (KeyValuePair<string, List<GameObject>> entry in pooledProjectiles) {
             List<GameObject> pool = entry.Value;
             foreach (GameObject pp in pool) {
-                pp.SetActive(false);
+                ReturnToPool(pp);
             }
         }
     }
@@ -70,7 +68,7 @@ public class ProjectilePool : MonoBehaviour {
         foreach (KeyValuePair<string, List<GameObject>> entry in pooledDrops) {
             List<GameObject> pool = entry.Value;
             foreach (GameObject pd in pool) {
-                pd.SetActive(false);
+                ReturnToPool(pd);
             }
         }
     }

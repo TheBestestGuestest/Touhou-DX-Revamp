@@ -1,32 +1,36 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Score : MonoBehaviour {
-    public Text highScore;
-    public Text currScore;
+    public Text highScoreText;
+    public Text currScoreText;
 
     public static Score SharedInstance;
-    public float score;
+    private float score = 0;
+    private float highScore = 0;
+    private string highScoreKey = "high score: TEST";
 
-    // Use this for initialization
     void Start() {
         SharedInstance = this;
-        score = 0;
+        if (PlayerPrefs.HasKey(highScoreKey)) highScore = PlayerPrefs.GetFloat(highScoreKey);
+        else highScore = 0;
+
         updateScore();
-        setHighScore();
-    }
-    private void setHighScore() {
-        //something herer
     }
 
     public void changeScore(float change) {
         score += change;
+        if (score > highScore) highScore = score;
+
         updateScore();
     }
 
     public void updateScore() {
-        currScore.text = ((int)(score)).ToString().PadLeft(7, '0');
+        currScoreText.text = ((int)(score)).ToString().PadLeft(7, '0');
+        highScoreText.text = ((int)(highScore)).ToString().PadLeft(7, '0');
+    }
+
+    public void saveScore() {
+        if (highScore > PlayerPrefs.GetFloat(highScoreKey)) PlayerPrefs.SetFloat(highScoreKey, highScore);
     }
 }

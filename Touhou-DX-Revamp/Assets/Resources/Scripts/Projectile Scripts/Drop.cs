@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Drop : Projectile { 
     private GameObject player;
@@ -14,7 +12,7 @@ public class Drop : Projectile {
         //drop.effect = e;
         drop.attractStrength = s;
         drop.transform.Rotate(new Vector3(0, 0, a));
-        drop.name = prefab.Substring(prefab.LastIndexOf("/") + 1);
+        drop.name = prefab.Substring(prefab.LastIndexOf("/") + 1);  //optimize???
         return drop;
     }
     

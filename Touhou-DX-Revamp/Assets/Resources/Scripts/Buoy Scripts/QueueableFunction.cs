@@ -1,18 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class QueueableFunction : MonoBehaviour {
-    public int functionIndex;
-    private string queueName = "Queue Collider";
     private FunctionSpawner funcSpawn;
+    public int functionIndex;
 
     void Start(){
         funcSpawn = GameObject.Find("Queue Objects").GetComponent<FunctionSpawner>();
     }
 
     public void OnTriggerEnter2D(Collider2D collider) {
-        if (collider.name.Equals(queueName)) {
+        if (collider.name.Equals("Queue Collider")) {
             funcSpawn.activateFunction(functionIndex);
             Destroy(gameObject);
         }

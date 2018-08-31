@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour {
@@ -9,11 +7,13 @@ public class Main : MonoBehaviour {
     void Awake() {
         SharedInstance = this;
     }
+
     public void GameOver() {
         SceneManager.LoadScene("GameOver Screen");
     }
+
     public void Win() {
+        Score.SharedInstance.saveScore();
         SceneManager.LoadScene("Win Screen");
     }
-
 }

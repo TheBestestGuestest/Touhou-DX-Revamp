@@ -2,11 +2,10 @@
 
 public class GameQueue : MonoBehaviour {
     public static GameQueue SharedInstance;
-    [System.NonSerialized]
-    public bool isQueueing = true;
-    public float queueSpeed = 1f;
+    private Transform trans;
 
-    public Transform trans;
+    public bool isQueueing { get; set; }
+    public float queueSpeed = 1f;
 
     void Awake() {
         SharedInstance = this;

@@ -1,17 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Projectile : MonoBehaviour {
-    [HideInInspector]
-    public int damage;
-    [HideInInspector]
-    public bool isPiercing;
-    [HideInInspector]
-    public Transform trans;
-    public MovePath path;
-    public float totalTime;
-    public float destroyTime = -1;
+    public int damage { get; set; }
+    public bool isPiercing { get; set; }
+
+    protected Transform trans;
+    protected MovePath path;
+    protected float totalTime;
+
+    private float destroyTime = -1;
     private Vector3 spawnPos;
 
     public static Projectile Create(string prefab, Vector3 pos, MovePath mp, int dmg = 0, float t = -1, bool p = false) {
@@ -32,13 +29,16 @@ public class Projectile : MonoBehaviour {
     public void Awake() {
         trans = transform;
     }
+
     public void OnEnable() {
         totalTime = 0;
     }
+
     public void Update() {
-        totalTime += Time.deltaTime;
-        trans.position = path(totalTime, spawnPos);  //need a DESTROY AFTER X SEC or ON INVIS
+        trans.position = path(totalTime, spawnPos);
         if (destroyTime != -1 && totalTime >= destroyTime) ProjectilePool.SharedInstance.ReturnToPool(gameObject);
+        
+        totalTime += Time.deltaTime;
     }
 
     private void OnBecameInvisible() {

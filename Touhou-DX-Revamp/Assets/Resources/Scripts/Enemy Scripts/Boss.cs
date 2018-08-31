@@ -218,7 +218,6 @@ public class BossBulletPatterns {
     }
     public IEnumerator makeDrops(int num) {
         for (int i = 0; i < num; i++) {
-            Debug.Log("hi");
             ProjectilePool.SharedInstance.GetPooledDrop(dropPrefab, trans.position + new Vector3(Random.value - 0.5f, Random.value - 0.5f, 0) * 0.6f, null, 0.07f, (Random.value - 0.5f) * 300 + 90);
             yield return null;
         }

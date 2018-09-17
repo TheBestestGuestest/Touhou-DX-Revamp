@@ -10,6 +10,7 @@ public class GameQueue : MonoBehaviour {
     void Awake() {
         SharedInstance = this;
         trans = transform;
+        isQueueing = true;
     }
 
     void Update() {

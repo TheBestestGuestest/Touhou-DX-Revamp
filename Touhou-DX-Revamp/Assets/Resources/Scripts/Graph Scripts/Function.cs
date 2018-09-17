@@ -151,7 +151,7 @@ public class Function : MonoBehaviour {
         StartCoroutine(doProcess());
     }
 
-    public virtual IEnumerator doProcess() {
+    public virtual IEnumerator doProcess() {  //DELETION SCREWS UP WHEN THE GRAPH IS CHANGING???
         int currDiv = 0;
 
         for (float drawTimer = 0f; currDiv <= subdivisions; drawTimer += Time.deltaTime) {

@@ -72,7 +72,7 @@ public class CartesianPlane : MonoBehaviour {
         if (isGridShifting()) drawGrid();
     }
 
-    public void drawGrid() {
+    public void drawGrid() {  //THE BLACK LINES HAVE TO BE DRAWN ON TOP
         float xLength = gridProperties[(int)GridProperty.X_LENGTH];
         float yLength = gridProperties[(int)GridProperty.Y_LENGTH];
         Vector3 point1;

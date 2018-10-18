@@ -51,9 +51,16 @@ public class CartesianPlane : MonoBehaviour {
             for (int j = 0; j < numGridLines; j++) {
                 gridLines[i][j] = new VectorLine("GridLines", new List<Vector3>(), 4f, LineType.Continuous, Joins.None);
                 gridLines[i][j].SetCanvas(gridCanvas, false);
-                gridLines[i][j].color = j == originLineIndex ? Color.black : Color.gray;
+                gridLines[i][j].color = Color.cyan;
             }
         }
+        gridLines[0][originLineIndex] = new VectorLine("GridLines", new List<Vector3>(), 4f, LineType.Continuous, Joins.None);
+        gridLines[0][originLineIndex].SetCanvas(gridCanvas, false);
+        gridLines[0][originLineIndex].color = Color.red;
+
+        gridLines[1][originLineIndex] = new VectorLine("GridLines", new List<Vector3>(), 4f, LineType.Continuous, Joins.None);
+        gridLines[1][originLineIndex].SetCanvas(gridCanvas, false);
+        gridLines[1][originLineIndex].color = Color.red;
 
         drawGrid();
     }
@@ -191,4 +198,6 @@ public class InGameDimentions {
 
     public static float centerX = (rightEdge + leftEdge) / 2.0f;
     public static float centerY = (topEdge + bottomEdge) / 2.0f;
+
+    public static Vector3 center = new Vector3(centerX, centerY, 0);
 }

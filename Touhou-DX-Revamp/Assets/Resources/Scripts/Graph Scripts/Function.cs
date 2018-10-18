@@ -23,7 +23,7 @@ public class Function : MonoBehaviour {
     private List<List<Vector3>> points;
 
     public static Function Create(Transform trans, string prefab, Equation equation, int subdiv, float drawTime, float start, float end, float levelOfdiscont = float.PositiveInfinity) {
-        GameObject obj = Instantiate((GameObject)Resources.Load(prefab), CartesianPlane.SharedPlane.getOrigin(), Quaternion.identity, trans) as GameObject;
+        GameObject obj = Instantiate((GameObject)Resources.Load(prefab), InGameDimentions.center, Quaternion.identity, trans) as GameObject;
         Function func = obj.GetComponent<Function>();
         func.name = equation.name;
         func.eq = equation;

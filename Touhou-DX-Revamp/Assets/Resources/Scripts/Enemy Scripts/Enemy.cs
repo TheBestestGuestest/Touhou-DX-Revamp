@@ -1,100 +1,77 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss : MonoBehaviour {
+public class Enemy : MonoBehaviour {
     [HideInInspector]
     public int maxHealth, currHealth;
 
-    private Transform trans;
-    private BossHealthBar bhb;
-    private BossBulletPatterns bbp;
-    private BossFunctions bf;
+    protected Transform trans;
+    protected EnemyHealthBar hb;
+    protected EnemyBulletPatterns bp;
+    protected EnemyFunctions funcs;
 
-    private float shootingRate = 1.75f;
-    private float shootTimer;
-
-
-    private float functionRate = 7f;
-    private float functionTimer;
-
-    private float moveRate = 3f;
-    private float moveTimer;
-    private Vector3 destination;
-    private Vector3 temp;
+    protected float globalTimer;
 
     private string playerProjectileTag = "Player Projectile";
 
-    void Awake() {
+    protected virtual void Awake() {
         trans = transform;
-        bhb = GetComponentInChildren<BossHealthBar>() as BossHealthBar;
-        bbp = new BossBulletPatterns(trans);
-        bf = GetComponentInChildren<BossFunctions>() as BossFunctions;
-        bf.Start();
+
+        hb = GetComponentInChildren<EnemyHealthBar>() as EnemyHealthBar;
+        bp = new EnemyBulletPatterns(trans);
+        funcs = new EnemyFunctions(trans);
 
         gameObject.SetActive(false);
     }
-
-    void OnEnable() {
+    private void OnEnable() {
+        initiateStats();
+        globalTimer = 0.0f;
+        hb.updateBar();
+        trans = transform;
+    }
+    protected virtual void initiateStats() {
         GameQueue.SharedInstance.isQueueing = false;
-
         maxHealth = 10000;
         currHealth = maxHealth;
-        moveTimer = 0f;
-        shootTimer = 0f;
-        functionTimer = 0f;
-
-        destination = trans.position;
-        temp = destination;
-
-        bhb.updateBar();
     }
 
-    void Update() {
-        //shooting
-        if (shootTimer >= shootingRate) {
-            shootTimer = 0f;
-            StartCoroutine(bbp.runBulletPattern((int)(Random.value * bbp.getCount())));
-        }
-
-        //functions
-        if (functionTimer >= functionRate) {
-            functionTimer = 0f;
-            bf.activateFunction(-1);
-        }
-
-        //movement
-        if (moveTimer >= moveRate * 3f) {
-            temp = destination;
-            destination = new Vector3(Random.value * (-InGameDimentions.screenWidth + 0.333f) - InGameDimentions.centerX, Random.value * 3 + 1, temp.z);
-            moveTimer = 0f;
-        }
-        else if (moveTimer <= moveRate || !trans.position.Equals(destination)) trans.position = Vector3.Lerp(temp, destination, moveTimer / moveRate);
-
-        shootTimer += Time.deltaTime;
-        functionTimer += Time.deltaTime;
-        moveTimer += Time.deltaTime;
+    private void Update() {
+        shoot();
+        move();
+        function();
+        globalTimer += Time.deltaTime;
+    }
+    protected virtual void shoot() {
+        //StartCoroutine(bbp.runBulletPattern((int)(UnityEngine.Random.value * bbp.getCount())));
+    }
+    protected virtual void move() {
+    }
+    protected virtual void function() {
+        //funcs.activateFunction(-1);
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.CompareTag(playerProjectileTag)) {
-            string colName = collision.gameObject.name;
-            Projectile p = collision.gameObject.GetComponent<Projectile>();
+        if (collision.CompareTag(playerProjectileTag)) OnPlayerCollision(collision);
+    }
+    protected virtual void OnPlayerCollision(Collider2D collision) {
+        string colName = collision.gameObject.name;
+        Projectile p = collision.gameObject.GetComponent<Projectile>();
 
-            currHealth = Mathf.Max(currHealth - p.damage, 0);
-            bhb.updateBar();
-            if (!p.isPiercing) ProjectilePool.SharedInstance.ReturnToPool(collision.gameObject);
+        currHealth = Mathf.Max(currHealth - p.damage, 0);
+        hb.updateBar();
+        if (!p.isPiercing) ProjectilePool.SharedInstance.ReturnToPool(collision.gameObject);
 
-            if (!isAlive()) {
-                StartCoroutine(bbp.makeDrops(100));  //WHY
-                GameQueue.SharedInstance.isQueueing = true;
-                bf.deactivateAll();
-                gameObject.SetActive(false);
-                Score.SharedInstance.changeScore(10000);
-            }
-            else {
-                StartCoroutine(bbp.makeDrops(1));
-            }
+        if (!isAlive()) {
+            StartCoroutine(bp.makeDrops(100));  //WHY
+            GameQueue.SharedInstance.isQueueing = true;
+            funcs.deactivateAll();
+            gameObject.SetActive(false);
+            Score.SharedInstance.changeScore(10000);
+        }
+        else {
+            StartCoroutine(bp.makeDrops(1));
         }
     }
 
@@ -103,10 +80,10 @@ public class Boss : MonoBehaviour {
     }
 }
 
-public class BossBulletPatterns {
-    public Transform trans;
-    private delegate IEnumerator makeBulletPatterns();
-    private List<makeBulletPatterns> bulletPatterns;
+public class EnemyBulletPatterns {
+    protected Transform trans;
+    protected delegate IEnumerator makeBulletPatterns();
+    protected List<makeBulletPatterns> bulletPatterns;
 
     private MovePath[][] cachedCirclePattern = new MovePath[4][];
     private MovePath[][][] cachedSwirlPattern = new MovePath[2][][];
@@ -155,7 +132,7 @@ public class BossBulletPatterns {
         yield break;
     }
     private IEnumerator makeSwirlPattern() {
-        int dir = Random.value >= 0.5 ? 1 : -1;
+        int dir = UnityEngine.Random.value >= 0.5 ? 1 : -1;
         for (int i = 0; i < 4; i++) {
             dir *= -1;
             for (int j = 0; j < 16; j++) {
@@ -176,12 +153,13 @@ public class BossBulletPatterns {
         yield break;
     }
 
-    public BossBulletPatterns(Transform transform) {
+    public EnemyBulletPatterns(Transform transform) {
         trans = transform;
+        bulletPatterns = new List<makeBulletPatterns>();
         cacheAll();
     }
-    private void cacheAll() {
-        bulletPatterns = new List<makeBulletPatterns>();
+
+    protected virtual void cacheAll() {
         bulletPatterns.Add(makeCirclePattern);
         for (int i = 0; i < 4; i++) {
             cachedCirclePattern[i] = new MovePath[16];
@@ -200,7 +178,6 @@ public class BossBulletPatterns {
             }
         }
 
-
         bulletPatterns.Add(makeSweepPattern);
         for (int i = 0; i < 3; i++) {
             int jMax = i == 1 ? 7 : 8;
@@ -216,13 +193,54 @@ public class BossBulletPatterns {
         if (i >= 0 && i < bulletPatterns.Count) return bulletPatterns[i]();
         throw new System.Exception();
     }
-    public IEnumerator makeDrops(int num) {
+    public virtual IEnumerator makeDrops(int num) {
         for (int i = 0; i < num; i++) {
-            ProjectilePool.SharedInstance.GetPooledDrop(dropPrefab, trans.position + new Vector3(Random.value - 0.5f, Random.value - 0.5f, 0) * 0.6f, null, 0.07f, (Random.value - 0.5f) * 300 + 90);
+            ProjectilePool.SharedInstance.GetPooledDrop(dropPrefab, trans.position + new Vector3(UnityEngine.Random.value - 0.5f, UnityEngine.Random.value - 0.5f, 0) * 0.6f, null, 0.07f, (UnityEngine.Random.value - 0.5f) * 300 + 90);
             yield return null;
         }
     }
     public int getCount() {
         return bulletPatterns.Count;
+    }
+}
+
+public class EnemyFunctions {
+    protected Transform trans;
+    protected Func<float, Vector3> temp;
+    protected Equation eq;
+    protected List<Function> funcList;
+
+    public EnemyFunctions(Transform transform) {
+        trans = transform;
+        funcList = new List<Function>();
+        cacheAll();
+    }
+
+    protected virtual void cacheAll() {
+        temp = (theta) => {
+            return new Vector3(theta, 0.5f * (theta + Mathf.Sin(theta * 2.0f)));
+        };
+        eq = new Equation(EquationType.RECTANGULAR, "y = x + sin(x)", temp);
+        funcList.Add(Function.Create(trans, "Prefabs/Function", eq, 100, 1.5f, -6, 6));
+
+        temp = (theta) => {
+            return new Vector3(theta, -0.5f * (theta + Mathf.Sin(theta * 2.0f)));
+        };
+        eq = new Equation(EquationType.RECTANGULAR, "y = -x + sin(x)", temp);
+        funcList.Add(Function.Create(trans, "Prefabs/Function", eq, 100, 1.5f, -6, 6));
+    }
+
+    public void activateFunction(int index) {
+        if (index >= funcList.Count || index < -1) throw new Exception("Function index out of range! (" + index + ")");
+        if (index == -1) index = (int)(UnityEngine.Random.value * funcList.Count);
+        Function func = funcList[index];
+        if (func.gameObject.activeInHierarchy) throw new Exception("Function is already active!");
+        else func.gameObject.SetActive(true);
+    }
+    public void deactivateAll() {
+        foreach (Function func in funcList) {
+            func.gameObject.SetActive(false);
+            func.destroyLines();
+        }
     }
 }

@@ -84,43 +84,7 @@ public class EnemyBulletPatterns {
     protected Transform trans;
     protected delegate IEnumerator makeBulletPatterns();
     protected List<makeBulletPatterns> bulletPatterns;
-
-    private MovePath[][] cachedCirclePattern = new MovePath[4][];
-    private MovePath[][][] cachedSwirlPattern = new MovePath[2][][];
-    private MovePath[][] cachedSweepPattern = new MovePath[3][];
-
-    private WaitForSeconds circleWait = new WaitForSeconds(0.1f);
-    private WaitForSeconds swirlWait = new WaitForSeconds(0.5f);
-    private WaitForSeconds sweepWait = new WaitForSeconds(0.2f);
-
-    private string circlePrefab = "Prefabs/Projectiles/BossBomb";
-    private string swirlPrefab = "Prefabs/Projectiles/BossSwirl";
-    private string sweepPrefab = "Prefabs/Projectiles/BossPotato";
-    private string dropPrefab = "Prefabs/Projectiles/Drop";
-
-    private MovePath circlePattern(int i, int j) {
-        return delegate (float t, Vector3 pos) {
-            float rads = j * Mathf.PI / 8;
-            float distX = t * 5 * Mathf.Cos(rads);
-            float distY = t * 5 * Mathf.Sin(rads);
-            return new Vector3(pos.x + distX, pos.y + distY, pos.z);
-        };
-    }
-    private MovePath swirlPattern(int i, int j, int dir) {
-        return delegate (float t, Vector3 pos) {
-            float rads = (j + 1) * Mathf.PI / 16;
-            float distX = t * 3 * dir * Mathf.Cos(rads + t);
-            float distY = t * 3 * Mathf.Sin(rads + t);
-            return new Vector3(pos.x + distX, pos.y + distY, pos.z);
-        };
-    }
-    private MovePath sweepPattern(int i, int j, float dir) {
-        return delegate (float t, Vector3 pos) {
-            float distX = t * 10 * dir;
-            float distY = t * -7;
-            return new Vector3(pos.x + distX, pos.y + distY, pos.z);
-        };
-    }
+    protected List<float> patternDurations;
 
     private IEnumerator makeCirclePattern() {
         for (int i = 0; i < 4; i++) {
@@ -153,9 +117,47 @@ public class EnemyBulletPatterns {
         yield break;
     }
 
+    private WaitForSeconds circleWait = new WaitForSeconds(0.1f);
+    private WaitForSeconds swirlWait = new WaitForSeconds(0.5f);
+    private WaitForSeconds sweepWait = new WaitForSeconds(0.2f);
+
+    private MovePath[][] cachedCirclePattern = new MovePath[4][];
+    private MovePath[][][] cachedSwirlPattern = new MovePath[2][][];
+    private MovePath[][] cachedSweepPattern = new MovePath[3][];
+
+    private MovePath circlePattern(int i, int j) {
+        return delegate (float t, Vector3 pos) {
+            float rads = j * Mathf.PI / 8;
+            float distX = t * 5 * Mathf.Cos(rads);
+            float distY = t * 5 * Mathf.Sin(rads);
+            return new Vector3(pos.x + distX, pos.y + distY, pos.z);
+        };
+    }
+    private MovePath swirlPattern(int i, int j, int dir) {
+        return delegate (float t, Vector3 pos) {
+            float rads = (j + 1) * Mathf.PI / 16;
+            float distX = t * 3 * dir * Mathf.Cos(rads + t);
+            float distY = t * 3 * Mathf.Sin(rads + t);
+            return new Vector3(pos.x + distX, pos.y + distY, pos.z);
+        };
+    }
+    private MovePath sweepPattern(int i, int j, float dir) {
+        return delegate (float t, Vector3 pos) {
+            float distX = t * 10 * dir;
+            float distY = t * -7;
+            return new Vector3(pos.x + distX, pos.y + distY, pos.z);
+        };
+    }
+
+    private string circlePrefab = "Prefabs/Projectiles/BossBomb";
+    private string swirlPrefab = "Prefabs/Projectiles/BossSwirl";
+    private string sweepPrefab = "Prefabs/Projectiles/BossPotato";
+    private string dropPrefab = "Prefabs/Projectiles/Drop";
+
     public EnemyBulletPatterns(Transform transform) {
         trans = transform;
         bulletPatterns = new List<makeBulletPatterns>();
+        patternDurations = new List<float>();
         cacheAll();
     }
 
@@ -193,6 +195,11 @@ public class EnemyBulletPatterns {
         if (i >= 0 && i < bulletPatterns.Count) return bulletPatterns[i]();
         throw new System.Exception();
     }
+    public float getPatternDuration(int i) {
+        if (i >= 0 && i < patternDurations.Count) return patternDurations[i];
+        throw new System.Exception();
+    }
+
     public virtual IEnumerator makeDrops(int num) {
         for (int i = 0; i < num; i++) {
             ProjectilePool.SharedInstance.GetPooledDrop(dropPrefab, trans.position + new Vector3(UnityEngine.Random.value - 0.5f, UnityEngine.Random.value - 0.5f, 0) * 0.6f, null, 0.07f, (UnityEngine.Random.value - 0.5f) * 300 + 90);

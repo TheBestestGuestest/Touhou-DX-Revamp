@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 2
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -83,7 +83,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   - serializedVersion: 2
     buildTarget: Standalone
-    maxTextureSize: 512
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -94,7 +94,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   - serializedVersion: 2
     buildTarget: Android
-    maxTextureSize: 512
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -111,7 +111,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 41
+        y: 39
         width: 29
         height: 33
       alignment: 0
@@ -121,7 +121,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f42f7df8deb1af740887f935499f136f
+      spriteID: f82ef79b1cd997a4bb35371c791244c3
       vertices: []
       indices: 
       edges: []
@@ -131,9 +131,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 31
-        y: 41
-        width: 32
-        height: 38
+        y: 39
+        width: 26
+        height: 35
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,7 +141,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e1163f9278bce584fbf75ebea210b08c
+      spriteID: 650d017a2f0850440973722aef1dae30
       vertices: []
       indices: 
       edges: []
@@ -150,9 +150,9 @@ TextureImporter:
       name: crates_2
       rect:
         serializedVersion: 2
-        x: 65
-        y: 41
-        width: 41
+        x: 59
+        y: 39
+        width: 39
         height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -161,7 +161,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9d1c05c479180a04c81eb24ca7f0b936
+      spriteID: 5a56926b55763c84da36d27aa48b3a13
       vertices: []
       indices: 
       edges: []
@@ -171,7 +171,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 23
+        y: 20
         width: 17
         height: 17
       alignment: 0
@@ -181,7 +181,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9787c82f71036714697cea2490b78bd0
+      spriteID: 976b963acd1663e4fb71c83cf23f481e
       vertices: []
       indices: 
       edges: []
@@ -191,7 +191,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 19
-        y: 23
+        y: 20
         width: 17
         height: 17
       alignment: 0
@@ -201,7 +201,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dcef97f9e3da348498d10a468311519d
+      spriteID: 5b8364bd4a6d44e42bc2cdbac929d863
       vertices: []
       indices: 
       edges: []
@@ -211,7 +211,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 38
-        y: 23
+        y: 20
         width: 17
         height: 17
       alignment: 0
@@ -221,7 +221,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 84abff82c2d492248a8aff449e9f7559
+      spriteID: 2c11ebb58a11c424ea0c83c3406e9a64
       vertices: []
       indices: 
       edges: []
@@ -230,8 +230,8 @@ TextureImporter:
       name: crates_6
       rect:
         serializedVersion: 2
-        x: 56
-        y: 21
+        x: 57
+        y: 19
         width: 19
         height: 19
       alignment: 0
@@ -241,7 +241,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b753d546a79fc2c4a8308f57ef778980
+      spriteID: c86f050c4936cd141853debe4ff00f8f
       vertices: []
       indices: 
       edges: []
@@ -250,8 +250,8 @@ TextureImporter:
       name: crates_7
       rect:
         serializedVersion: 2
-        x: 86
-        y: 21
+        x: 79
+        y: 19
         width: 19
         height: 19
       alignment: 0
@@ -261,7 +261,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2d75fbae8c4e31d46b6de459b1f9ee78
+      spriteID: d77262b14642b4a4fa5b0c398753529b
       vertices: []
       indices: 
       edges: []
@@ -270,8 +270,8 @@ TextureImporter:
       name: crates_8
       rect:
         serializedVersion: 2
-        x: 0
-        y: 7
+        x: 8
+        y: 3
         width: 14
         height: 14
       alignment: 0
@@ -281,7 +281,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d97dc4d5436c2db489b73a011d2187a0
+      spriteID: cfa981f68841eaf41aef5d26497852a1
       vertices: []
       indices: 
       edges: []
@@ -290,8 +290,8 @@ TextureImporter:
       name: crates_9
       rect:
         serializedVersion: 2
-        x: 16
-        y: 7
+        x: 24
+        y: 3
         width: 14
         height: 14
       alignment: 0
@@ -301,7 +301,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4c2a2d31572e7f94db20b01407b5b83d
+      spriteID: 017e865ac73d0794cbbbfe51d92b2410
       vertices: []
       indices: 
       edges: []
@@ -310,8 +310,8 @@ TextureImporter:
       name: crates_10
       rect:
         serializedVersion: 2
-        x: 32
-        y: 7
+        x: 40
+        y: 3
         width: 14
         height: 14
       alignment: 0
@@ -321,7 +321,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fec379b02bdf44343abad69a046acfcd
+      spriteID: 60c2912b5277d6d4e8ac266abb124f39
       vertices: []
       indices: 
       edges: []
@@ -330,7 +330,7 @@ TextureImporter:
       name: crates_11
       rect:
         serializedVersion: 2
-        x: 56
+        x: 68
         y: 0
         width: 19
         height: 19
@@ -341,7 +341,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4690663d4128caf4c9d74927c69081b3
+      spriteID: 9c419decf01fc8e4b83d0bfba965800d
       vertices: []
       indices: 
       edges: []
@@ -349,7 +349,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 8761f3a6127ce2e4c95157954260f90c
+    spriteID: f082515476431df438037387079ba7e1
     vertices: []
     indices: 
     edges: []

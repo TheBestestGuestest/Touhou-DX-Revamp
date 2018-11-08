@@ -66,7 +66,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 2
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -77,7 +77,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   - serializedVersion: 2
     buildTarget: Standalone
-    maxTextureSize: 512
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -88,7 +88,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   - serializedVersion: 2
     buildTarget: Android
-    maxTextureSize: 512
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -104,10 +104,10 @@ TextureImporter:
       name: robots_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 56
-        width: 9
-        height: 17
+        x: 2
+        y: 38
+        width: 17
+        height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,7 +115,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 809b49fc404c41e498ddf8aab9c438e7
+      spriteID: 182ed7bf20ba81647a675b4c668cd34b
       vertices: []
       indices: 
       edges: []
@@ -124,8 +124,48 @@ TextureImporter:
       name: robots_1
       rect:
         serializedVersion: 2
-        x: 11
-        y: 50
+        x: 24
+        y: 0
+        width: 35
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 346c6183954e46248aed21a7ec64bf66
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: robots_2
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 0
+        width: 45
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b41b4e585f30fb546a29bc423c34d59b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: robots_3
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 12
         width: 19
         height: 23
       alignment: 0
@@ -135,47 +175,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d31478fa4e0e5a946a4817cb4a1aa944
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: robots_2
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 62
-        width: 11
-        height: 11
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2d19b2512421e5d42ab668c3cc6dfaaf
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: robots_3
-      rect:
-        serializedVersion: 2
-        x: 45
-        y: 0
-        width: 55
-        height: 73
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c6023f9835012de43b49b3d2896423a5
+      spriteID: fc56a41516202a148999ff5c671f777b
       vertices: []
       indices: 
       edges: []
@@ -184,28 +184,8 @@ TextureImporter:
       name: robots_4
       rect:
         serializedVersion: 2
-        x: 102
+        x: 0
         y: 0
-        width: 72
-        height: 73
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 67b01934fbfd98645bffa486eba05080
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: robots_5
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 50
         width: 11
         height: 11
       alignment: 0
@@ -215,7 +195,27 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fcfe2971d007fbf4993188039d3799af
+      spriteID: ae7ffc431fb06d3429315fc428366828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: robots_5
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 0
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f01394fc9c5ae04ca0bf24ac070970c
       vertices: []
       indices: 
       edges: []
@@ -223,7 +223,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 3e20eaf0b4ec53b458561aea54334930
+    spriteID: 8ebf12c2d37dc874b8c501ecc8a39847
     vertices: []
     indices: 
     edges: []

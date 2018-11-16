@@ -2120,7 +2120,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4867164169967630, guid: 5b4ab493cb4a8f84eaf703aef268fc42, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1796778536823226, guid: 5b4ab493cb4a8f84eaf703aef268fc42, type: 2}
       propertyPath: m_IsActive
@@ -2394,6 +2394,75 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &701865564
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1024490116}
+    m_Modifications:
+    - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 12.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -1.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: objectInQueue
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1796778536823226, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114044463128965158, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd,
+        type: 2}
+      propertyPath: objectInQueue
+      value: 
+      objectReference: {fileID: 1778596957}
+    - target: {fileID: 1796778536823226, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
+      propertyPath: m_Name
+      value: Gear 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114044463128965158, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd,
+        type: 2}
+      propertyPath: spawnPos.z
+      value: -1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
+  m_IsPrefabAsset: 0
+--- !u!4 &701865565 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd,
+    type: 2}
+  m_PrefabInternal: {fileID: 701865564}
 --- !u!1 &711707770
 GameObject:
   m_ObjectHideFlags: 0
@@ -2973,6 +3042,7 @@ Transform:
   - {fileID: 640426207}
   - {fileID: 894876714}
   - {fileID: 101928594}
+  - {fileID: 701865565}
   - {fileID: 623865935}
   m_Father: {fileID: 711707771}
   m_RootOrder: 1
@@ -3862,6 +3932,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 0
   currHealth: 0
+  maxLinearSpd: 4
+  angleOfMovement: {x: 0.2, y: 0.05, z: 0}
+  maxRotationSpd: 360
+  rotationDirection: -1
 --- !u!58 &1638217742
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4048,6 +4122,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 0
   currHealth: 0
+  maxLinearSpd: 5
+  angleOfMovement: {x: -0.2, y: 0.05, z: 0}
+  maxRotationSpd: 240
+  rotationDirection: 1
 --- !u!58 &1778596960
 CircleCollider2D:
   m_ObjectHideFlags: 0

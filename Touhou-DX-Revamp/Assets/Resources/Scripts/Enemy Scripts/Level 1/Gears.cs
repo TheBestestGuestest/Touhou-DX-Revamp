@@ -7,13 +7,13 @@ public class Gears : Enemy {
 
     private Transform gearSprite;
 
-    private float maxLinearSpd;
+    public float maxLinearSpd;
     private float currLinearSpeed;
-    private Vector3 angleOfMovement;
+    public Vector3 angleOfMovement;
 
-    private float maxRotationSpd;
+    public float maxRotationSpd;
     private float currRotationSpd;
-    private int rotationDirection;
+    public int rotationDirection;
 
     private float shootRate = 3f;
     private float shootTimer = 0f;
@@ -32,14 +32,8 @@ public class Gears : Enemy {
         radius = 0.75f;
         maxHealth = 5000;
         currHealth = maxHealth;
-
-        maxLinearSpd = 4f;
         currLinearSpeed = maxLinearSpd;
-        angleOfMovement = new Vector3(0.2f, 0.05f, 0);
-
-        maxRotationSpd = 360f;
         currRotationSpd = maxRotationSpd / 3;
-        rotationDirection = -1;
         ((GearsBulletPatterns)bp).setRotationDirection(rotationDirection);
     }
 
@@ -183,7 +177,7 @@ public class GearsBulletPatterns : EnemyBulletPatterns {
                 cachedCirclePattern[i][j] = circlePattern(i, j);
             }
         }
-        patternDurations.Add(3f);
+        patternDurations.Add(2.6f);
 
         bulletPatterns.Add(makeSuccPattern);
         for (int i = 0; i < cachedSuccPattern.Length; i++) {
@@ -201,7 +195,7 @@ public class GearsBulletPatterns : EnemyBulletPatterns {
                 cachedSpiralPattern[i][j] = spiralPattern(i, j);
             }
         }
-        patternDurations.Add(8f);
+        patternDurations.Add(7.5f);
     }
 
     public void setRotationDirection(int RD) {

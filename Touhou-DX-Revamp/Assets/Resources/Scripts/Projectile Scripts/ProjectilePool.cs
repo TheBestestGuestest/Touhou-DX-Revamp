@@ -55,7 +55,9 @@ public class ProjectilePool : MonoBehaviour {
         if (isProjectile(obj) != null) obj.SetActive(false);
     }
 
-    //maybe only enemy projectiles???????
+    public void ReturnEnemyProjectilesToPool(){
+        //todo sus
+    }
     public void ReturnAllProjectilesToPool() {
         foreach (KeyValuePair<string, List<GameObject>> entry in pooledProjectiles) {
             List<GameObject> pool = entry.Value;

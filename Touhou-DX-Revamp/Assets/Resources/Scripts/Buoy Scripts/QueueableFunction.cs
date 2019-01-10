@@ -10,7 +10,7 @@ public class QueueableFunction : MonoBehaviour {
 
     public void OnTriggerEnter2D(Collider2D collider) {
         if (collider.name.Equals("Queue Collider")) {
-            funcSpawn.activateFunction(functionIndex);
+            //funcSpawn.setFunctionActiveState(functionIndex, true);
             Destroy(gameObject);
         }
     }

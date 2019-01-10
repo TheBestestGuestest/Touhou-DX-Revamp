@@ -33,7 +33,7 @@ public class PlayerInputControl : MonoBehaviour {
         invulnPlayer = Resources.Load("Sprites/CharacterSprites/cirnoHit", typeof(Sprite)) as Sprite;
     }
 
-    void Update() {
+    void Update() {  //probably gonna use states here?
         //sprites
         //  player
         if (ps.isInvuln) {
@@ -57,8 +57,8 @@ public class PlayerInputControl : MonoBehaviour {
         if (Input.GetKey(KeyCode.RightArrow)) pos.x += dist;
         if (Input.GetKey(KeyCode.UpArrow)) pos.y += dist;
         if (Input.GetKey(KeyCode.DownArrow)) pos.y -= dist;
-        pos.x = Mathf.Max(Mathf.Min(pos.x, InGameDimentions.rightEdge), InGameDimentions.leftEdge);
-        pos.y = Mathf.Max(Mathf.Min(pos.y, InGameDimentions.topEdge), InGameDimentions.bottomEdge);
+        pos.x = Mathf.Clamp(pos.x, InGameDimentions.leftEdge, InGameDimentions.rightEdge);
+        pos.y = Mathf.Clamp(pos.y, InGameDimentions.bottomEdge, InGameDimentions.topEdge);
         trans.position = pos;
 
         //shooting
@@ -75,7 +75,6 @@ public class PlayerInputControl : MonoBehaviour {
     public void useShot() {
         pbc.useShot(ps);
     }
-
     public void useBomb() {
         pbc.useBomb(ps, psc);
     }

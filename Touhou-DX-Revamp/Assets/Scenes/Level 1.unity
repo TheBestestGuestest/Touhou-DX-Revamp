@@ -404,7 +404,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4867164169967630, guid: 1fe469c55cc374bb7b580cb366c59d3f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 9.81
+      value: 5.63
       objectReference: {fileID: 0}
     - target: {fileID: 4867164169967630, guid: 1fe469c55cc374bb7b580cb366c59d3f, type: 2}
       propertyPath: m_LocalPosition.y
@@ -445,7 +445,7 @@ Prefab:
     - target: {fileID: 114929585860937970, guid: 1fe469c55cc374bb7b580cb366c59d3f,
         type: 2}
       propertyPath: functionIndex
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1fe469c55cc374bb7b580cb366c59d3f, type: 2}
@@ -530,93 +530,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &158393969
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 158393970}
-  - component: {fileID: 158393971}
-  - component: {fileID: 158393973}
-  - component: {fileID: 158393972}
-  m_Layer: 5
-  m_Name: Equation List
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &158393970
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 158393969}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 249239185}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 474.8, y: -165.6}
-  m_SizeDelta: {x: 330.3, y: 229.1}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &158393971
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 158393969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af6e338f6d171314f82dcd833073bfb9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &158393972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 158393969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.5058824, g: 0.5019608, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 28
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 2
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: test
---- !u!222 &158393973
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 158393969}
-  m_CullTransparentMesh: 0
 --- !u!1 &179009012
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,7 +920,6 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 158393970}
   - {fileID: 1024731251}
   m_Father: {fileID: 2142163840}
   m_RootOrder: 1
@@ -1601,7 +1513,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 5.42
+      value: 3.29
       objectReference: {fileID: 0}
     - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
       propertyPath: m_LocalPosition.y
@@ -2092,7 +2004,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4867164169967630, guid: 5b4ab493cb4a8f84eaf703aef268fc42, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 16.18
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4867164169967630, guid: 5b4ab493cb4a8f84eaf703aef268fc42, type: 2}
       propertyPath: m_LocalPosition.y
@@ -2180,7 +2092,7 @@ Prefab:
     - target: {fileID: 114929585860937970, guid: 1fe469c55cc374bb7b580cb366c59d3f,
         type: 2}
       propertyPath: functionIndex
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1fe469c55cc374bb7b580cb366c59d3f, type: 2}
@@ -2403,7 +2315,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 12.05
+      value: 7.87
       objectReference: {fileID: 0}
     - target: {fileID: 4867164169967630, guid: 8a82b1c8055e7b74db12cbb20f2cc9bd, type: 2}
       propertyPath: m_LocalPosition.y
@@ -3099,7 +3011,7 @@ RectTransform:
   - {fileID: 1176428215}
   - {fileID: 385689165}
   m_Father: {fileID: 249239185}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3932,10 +3844,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 0
   currHealth: 0
-  maxLinearSpd: 4
+  maxLinearSpd: 6
   angleOfMovement: {x: 0.2, y: 0.05, z: 0}
-  maxRotationSpd: 360
-  rotationDirection: -1
+  maxRotationSpd: 480
+  initialRotationDirection: 0
 --- !u!58 &1638217742
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4122,10 +4034,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 0
   currHealth: 0
-  maxLinearSpd: 5
+  maxLinearSpd: 8
   angleOfMovement: {x: -0.2, y: 0.05, z: 0}
-  maxRotationSpd: 240
-  rotationDirection: 1
+  maxRotationSpd: 360
+  initialRotationDirection: 0
 --- !u!58 &1778596960
 CircleCollider2D:
   m_ObjectHideFlags: 0

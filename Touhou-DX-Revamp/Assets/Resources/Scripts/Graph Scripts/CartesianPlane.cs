@@ -70,16 +70,15 @@ public class CartesianPlane : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Alpha0)) StartCoroutine(shiftOrigin(new Vector3(-1f, Random.value), 1f));
+        if (Input.GetKeyDown(KeyCode.Alpha0)) StartCoroutine(shiftOrigin(new Vector3(-1f, Random.value), 2f));
         if (Input.GetKeyDown(KeyCode.Alpha1)) StartCoroutine(setProperty(GridProperty.X_SCALE, 2f, 1f));
         if (Input.GetKeyDown(KeyCode.Alpha2)) StartCoroutine(setProperty(GridProperty.X_LENGTH, 2f, 1f));
         if (Input.GetKeyDown(KeyCode.Alpha3)) StartCoroutine(setProperty(GridProperty.Y_SCALE, 2f, 1f));
         if (Input.GetKeyDown(KeyCode.Alpha4)) StartCoroutine(setProperty(GridProperty.Y_LENGTH, 2f, 1f));
 
-        if (isGridShifting()) drawGrid();
+        if (isGridShifting()) drawGrid(); //sus
     }
-
-    public void drawGrid() {  //THE BLACK LINES HAVE TO BE DRAWN ON TOP
+    public void drawGrid() {
         float xLength = gridProperties[(int)GridProperty.X_LENGTH];
         float yLength = gridProperties[(int)GridProperty.Y_LENGTH];
         Vector3 point1;
@@ -106,9 +105,8 @@ public class CartesianPlane : MonoBehaviour {
     }
 
     public IEnumerator shiftOrigin(Vector3 newOrigin, float time) {
-        int p = 4;
-
         //queueing stuff
+        int p = 4;
         int queue = ++numOpInQueue[p];
         while (queue > 0) {
             yield return waitDelay[0][p];
@@ -116,11 +114,9 @@ public class CartesianPlane : MonoBehaviour {
             if (queue > 0) yield return waitDelay[1][p];
         }
         isOpRunning[p] = true;
-        --numOpInQueue[p];
-
+        numOpInQueue[p]--;
         //shifting the var
         if (origin.position.Equals(newOrigin)) yield break;
-
         newOrigin.z = origin.position.z;
         Vector3 oldOrigin = origin.position;
         float timeElapsed = 0f;
@@ -132,35 +128,34 @@ public class CartesianPlane : MonoBehaviour {
             yield return null;
         }
         origin.position = newOrigin;
-
-        isOpRunning[p] = false;  //unqueue the command
+        //unqueue the command
+        isOpRunning[p] = false;
     }
     public IEnumerator setProperty(GridProperty gp, float newVal, float time) {
-        int p = (int)gp;
-
         //queueing stuff
+        int p = (int)gp;
         int queue = ++numOpInQueue[p];
         while (queue > 0) {
             yield return waitDelay[0][p];
             queue--;
             if (queue > 0) yield return waitDelay[1][p];
         }
-        numOpInQueue[p]--;
         isOpRunning[p] = true;
-
+        numOpInQueue[p]--;
         //shifting the var
         if (gridProperties[p] == newVal) yield break;
-
         float oldVal = gridProperties[p];
         float timeElapsed = 0f;
         while (timeElapsed + Time.deltaTime <= time) {
             timeElapsed += Time.deltaTime;
             gridProperties[p] = oldVal + (newVal - oldVal) * timeElapsed / time;
+            origin.localScale = new Vector3(xRatio(), yRatio(), 1);
             yield return null;
         }
         gridProperties[p] = newVal;
-
-        isOpRunning[p] = false;  //unqueue the command
+        origin.localScale = new Vector3(xRatio(), yRatio(), 1);  //sus
+        //unqueue the command
+        isOpRunning[p] = false;
     }
 
     public bool isGridShifting() {

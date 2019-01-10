@@ -140,7 +140,7 @@ public class MenuOptions : MonoBehaviour {
                 //load level 1
                 break;
             case 0:
-                Scenes.Load("Main");
+                Scenes.Load("Level 1");
                 break;
             case 1:
                 //load Mathf.Min(PlayerPrefs.getInt("Last Level Completed") + 1), if +c 12, else 6);

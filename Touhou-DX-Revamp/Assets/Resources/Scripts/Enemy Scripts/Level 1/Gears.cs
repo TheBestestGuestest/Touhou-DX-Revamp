@@ -58,7 +58,8 @@ public class Gears : Enemy
         }
     }
 
-    protected override void shoot(float globalTimer) {
+    protected override void shoot(float globalTimer) { //sus
+        if(true) return;
         if(bp.allPatternsIdle() && shootTimer >= shootCooldown){
             shootTimer = 0f;
             setGearMovement(GearMovement.SLOW);
@@ -71,24 +72,23 @@ public class Gears : Enemy
         }
         
     }
-    protected override void move(float globalTimer) {
+    protected override void move(float globalTimer) { //sus
         if(bp.getPatternState(1) == PatternState.IDLE && bp.getPatternState(2) == PatternState.IDLE){
             trans.position += currLinearSpeed * angleOfMovement * Time.deltaTime;
             if (trans.position.x + radius > InGameDimentions.rightEdge ||
                 trans.position.x - radius < InGameDimentions.leftEdge){
                 angleOfMovement.x *= -1;
-                //if(bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
+                if(bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
             }
             if (trans.position.y + radius > InGameDimentions.topEdge ||
                 trans.position.y - radius < InGameDimentions.bottomEdge){
                 angleOfMovement.y *= -1;
-                //if(bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
+                if(bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
             }
         }
         gearSprite.Rotate(rotationDirection * currRotationSpd * Vector3.forward * Time.deltaTime);
     }
-    protected override void function(float globalTimer) {
-        if(true) return;
+    protected override void function(float globalTimer) { //sus (next function wait dummy)
         if(funcs.getFunction(currFunction).getCurrProcess() == FunctionProcess.UNDRAWN){
             setGearMovement(initialRotationDirection ? GearMovement.CCW : GearMovement.CW);
             if(currFunction == 0) functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).drawFunction(600, 6f, -6f, 6f));
@@ -115,6 +115,9 @@ public class GearsBulletPatterns : EnemyBulletPatterns
         gearSprite = gS;
     }
 
+    private WaitForSeconds circleWait = new WaitForSeconds(0.1f);
+    private WaitForSeconds spiralWait = new WaitForSeconds(0.14f);
+    private WaitForSeconds succWait = new WaitForSeconds(0.4f);
     private IEnumerator makeCirclePattern()
     {
         patternStates[0] = PatternState.FIRING;
@@ -159,10 +162,6 @@ public class GearsBulletPatterns : EnemyBulletPatterns
         }
         patternStates[2] = PatternState.IDLE;
     }
-
-    private WaitForSeconds circleWait = new WaitForSeconds(0.1f);
-    private WaitForSeconds spiralWait = new WaitForSeconds(0.14f);
-    private WaitForSeconds succWait = new WaitForSeconds(0.4f);
 
     private MovePath circlePattern(int i, int j, int k, float offset)
     {
@@ -234,19 +233,34 @@ public class GearsFunctions : EnemyFunctions
             return new Vector3(x, Mathf.Sin(x * x) / (x * Mathf.Tan(x)));
         };
         eq = new Equation(EquationType.RECTANGULAR, "y = sin(x^2)/(x*tan(x))", temp);
-        eq.addDiscontinuity(new Discontinuity(0, 1, float.NaN, 1));
-        for(int x = -10; x <= 10; x++) if(x != 0) eq.addDiscontinuity(new Discontinuity(x * Mathf.PI, float.PositiveInfinity, float.NaN, float.NegativeInfinity));
+        eq.addDiscontinuity(new Discontinuity(0, 
+        new Vector3(0, 1), 
+        new Vector3(0, float.NaN), 
+        new Vector3(0, 1)));
+        for(int x = -10; x <= 10; x++) 
+            if(x != 0) 
+                eq.addDiscontinuity(new Discontinuity(x * Mathf.PI, 
+                new Vector3(x * Mathf.PI, float.PositiveInfinity), 
+                new Vector3(x * Mathf.PI, float.NaN), 
+                new Vector3(x * Mathf.PI, float.NegativeInfinity)));
         funcList.Add(Function.Create(trans, "Prefabs/Function", eq));
-        //subdivisions = 600, drawtime = 6f, start = -6f, end = 6f
 
         temp = (x) =>
         {
             return new Vector3(x, (Mathf.Pow(x, 4) - Mathf.Pow(4, x)) / Mathf.Sin(Mathf.PI * x));
         };
         eq = new Equation(EquationType.RECTANGULAR, "y = (x^4-4^x)/sin(pix)", temp);
-        eq.addDiscontinuity(new Discontinuity(2, 32 * (1 - Mathf.Log(2)) / Mathf.PI, float.NaN, 32 * (1 - Mathf.Log(2)) / Mathf.PI));
-        for(int x = -10; x <= 10; x++) if(x != 2) eq.addDiscontinuity(new Discontinuity(x, float.PositiveInfinity, float.NaN, float.NegativeInfinity));
+        eq.addDiscontinuity(new Discontinuity(2, 
+        new Vector3(2, 32 * (1 - Mathf.Log(2)) / Mathf.PI), 
+        new Vector3(2, float.NaN), 
+        new Vector3(2, 32 * (1 - Mathf.Log(2)) / Mathf.PI)));
+        for(int x = -10; x <= 10; x++) 
+            if(x != 2) 
+                eq.addDiscontinuity(new Discontinuity(x, 
+                new Vector3(x, float.PositiveInfinity), 
+                new Vector3(x, float.NaN), 
+                new Vector3(x, float.NegativeInfinity)));
         funcList.Add(Function.Create(trans, "Prefabs/Function", eq));
-        //subdivisions = 300, drawtime = 6f, start = -1.7f, end = 2.7f
+        
     }
 }

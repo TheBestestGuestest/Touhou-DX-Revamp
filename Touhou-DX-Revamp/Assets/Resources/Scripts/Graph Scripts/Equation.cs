@@ -37,27 +37,34 @@ public enum EquationType { RECTANGULAR, PARAMETRIC, POLAR }
 
 public class Discontinuity{
     public float param;
-    public float leftLimit;
-    public float trueValue;
-    public float rightLimit;
-
-    public Discontinuity(float p, float l, float t, float r){
+    public Vector3 leftLimit;
+    public Vector3 trueValue;
+    public Vector3 rightLimit;
+    public List<Vector3> holes;
+    public List<bool> isFilled;
+    public Discontinuity(float p, Vector3 l, Vector3 t, Vector3 r){
         param = p;
+        holes = new List<Vector3>();
+        isFilled = new List<bool>();
         leftLimit = l;
         trueValue = t;
         rightLimit = r;
-    }
 
-    public bool limitExistsAndIsNotInfinity(int approach){
-        switch(approach){
-            case -1:
-                return !(float.IsNaN(leftLimit) || float.IsInfinity(leftLimit));
-            case 0:
-                return !(float.IsNaN(trueValue) || float.IsInfinity(trueValue));
-            case 1:
-                return !(float.IsNaN(rightLimit) || float.IsInfinity(rightLimit));
-            default:
-                return false;
+        if(!isInfinityOrNaN(l)){
+            holes.Add(leftLimit);
+            isFilled.Add(leftLimit.Equals(trueValue));
         }
+        if(!isInfinityOrNaN(t) && !trueValue.Equals(leftLimit)){
+            holes.Add(trueValue);
+            isFilled.Add(true);
+        }
+        if(!isInfinityOrNaN(r) && !rightLimit.Equals(leftLimit) && !rightLimit.Equals(trueValue)){
+            holes.Add(rightLimit);
+            isFilled.Add(false);
+        }
+    }
+    private bool isInfinityOrNaN(Vector3 point){
+        return float.IsInfinity(point.x) || float.IsInfinity(point.y) || float.IsInfinity(point.z)
+        || float.IsNaN(point.x) || float.IsNaN(point.y) || float.IsNaN(point.z);
     }
 }

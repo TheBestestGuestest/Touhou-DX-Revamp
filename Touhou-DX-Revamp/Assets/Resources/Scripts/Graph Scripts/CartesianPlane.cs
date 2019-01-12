@@ -16,14 +16,14 @@ public class CartesianPlane : MonoBehaviour {
 
     private Transform origin;
     private float[] gridProperties = { 1f, 1f, 1f, 1f };  //ORDER: x-scale, x-length, y-scale, y-length
-    private float xRatio() { return gridProperties[0] / gridProperties[1]; }
-    private float yRatio() { return gridProperties[2] / gridProperties[3]; }
+    public float xRatio() { return gridProperties[0] / gridProperties[1]; }
+    public float yRatio() { return gridProperties[2] / gridProperties[3]; }
 
     private int[] numOpInQueue = new int[5];  //same order, #5 is origin
     private bool[] isOpRunning = new bool[5];  //same order, #5 is origin
     private WaitUntil[][] waitDelay = new WaitUntil[2][];  //dont worry about why there 2 just know that IT WORKS
 
-    private int numGridLines = 15;
+    private int numGridLines = 31;
     private int originLineIndex;
     private VectorLine[][] gridLines = new VectorLine[2][];
     private Canvas gridCanvas;
@@ -70,13 +70,11 @@ public class CartesianPlane : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Alpha0)) StartCoroutine(shiftOrigin(new Vector3(-1f, Random.value), 2f));
-        if (Input.GetKeyDown(KeyCode.Alpha1)) StartCoroutine(setProperty(GridProperty.X_SCALE, 2f, 1f));
-        if (Input.GetKeyDown(KeyCode.Alpha2)) StartCoroutine(setProperty(GridProperty.X_LENGTH, 2f, 1f));
-        if (Input.GetKeyDown(KeyCode.Alpha3)) StartCoroutine(setProperty(GridProperty.Y_SCALE, 2f, 1f));
-        if (Input.GetKeyDown(KeyCode.Alpha4)) StartCoroutine(setProperty(GridProperty.Y_LENGTH, 2f, 1f));
-
-        if (isGridShifting()) drawGrid(); //sus
+        if (Input.GetKeyDown(KeyCode.Alpha0)) StartCoroutine(shiftOrigin(InGameDimentions.center + new Vector3(Random.value * 2f, Random.value * 2f), 2f));
+        if (Input.GetKeyDown(KeyCode.Alpha1)) StartCoroutine(setProperty(GridProperty.X_SCALE, 1f + Random.value, 1f));
+        if (Input.GetKeyDown(KeyCode.Alpha2)) StartCoroutine(setProperty(GridProperty.X_LENGTH, 0.5f + Random.value, 1f));
+        if (Input.GetKeyDown(KeyCode.Alpha3)) StartCoroutine(setProperty(GridProperty.Y_SCALE, 1f + Random.value, 1f));
+        if (Input.GetKeyDown(KeyCode.Alpha4)) StartCoroutine(setProperty(GridProperty.Y_LENGTH, 0.5f + Random.value, 1f));
     }
     public void drawGrid() {
         float xLength = gridProperties[(int)GridProperty.X_LENGTH];
@@ -125,9 +123,11 @@ public class CartesianPlane : MonoBehaviour {
             float newPosX = oldOrigin.x + (newOrigin.x - oldOrigin.x) * timeElapsed / time;
             float newPosY = oldOrigin.y + (newOrigin.y - oldOrigin.y) * timeElapsed / time;
             origin.position = new Vector3(newPosX, newPosY, newOrigin.z);
+            drawGrid();
             yield return null;
         }
         origin.position = newOrigin;
+        drawGrid();
         //unqueue the command
         isOpRunning[p] = false;
     }
@@ -149,18 +149,13 @@ public class CartesianPlane : MonoBehaviour {
         while (timeElapsed + Time.deltaTime <= time) {
             timeElapsed += Time.deltaTime;
             gridProperties[p] = oldVal + (newVal - oldVal) * timeElapsed / time;
-            origin.localScale = new Vector3(xRatio(), yRatio(), 1);
+            drawGrid();
             yield return null;
         }
         gridProperties[p] = newVal;
-        origin.localScale = new Vector3(xRatio(), yRatio(), 1);  //sus
+        drawGrid();
         //unqueue the command
         isOpRunning[p] = false;
-    }
-
-    public bool isGridShifting() {
-        for (int i = 0; i < isOpRunning.Length; i++) if (isOpRunning[i]) return true;
-        return false;
     }
     public Vector3 pointRelativeToOrigin(Vector3 point) {
         return new Vector3(origin.position.x + (point.x * xRatio()), origin.position.y + (point.y * yRatio()), origin.position.z);

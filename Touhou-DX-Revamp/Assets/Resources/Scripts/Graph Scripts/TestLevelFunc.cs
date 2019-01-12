@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TestLevelFunc : FunctionSpawner {
-    void Start() {
+    void Start() {  //sus
         base.Start();
+        /* 
         temp = (theta) => {
             float r = 4 * Mathf.Cos(3 * theta);
             return new Vector3(r * Mathf.Cos(theta), r * Mathf.Sin(theta));
@@ -46,5 +47,6 @@ public class TestLevelFunc : FunctionSpawner {
         eq.addDiscontinuity(new Discontinuity(0, 1, 0.7f, 1.3f));
         funcList.Add(Function.Create(trans, "Prefabs/Function", eq));
         //subdivisions = 300, drawtime = 3f, start = -6f, end = 6f
+        */
     }
 }

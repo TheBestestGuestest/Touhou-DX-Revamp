@@ -25,7 +25,7 @@ public class CartesianPlane : MonoBehaviour {
 
     private int numGridLines = 31;
     private int originLineIndex;
-    private VectorLine[][] gridLines = new VectorLine[2][];
+    private VectorLine gridLines;
     private Canvas gridCanvas;
     private Canvas functionCanvas;
     public Canvas getFunctionCanvas() { return functionCanvas; }
@@ -45,24 +45,13 @@ public class CartesianPlane : MonoBehaviour {
         }
 
         origin.position = new Vector3(InGameDimentions.centerX, InGameDimentions.centerY, 3);
-
-        for (int i = 0; i < gridLines.Length; i++) {
-            gridLines[i] = new VectorLine[numGridLines];
-            for (int j = 0; j < numGridLines; j++) {
-                gridLines[i][j] = new VectorLine("GridLines", new List<Vector3>(), 4f, LineType.Continuous, Joins.None);
-                gridLines[i][j].SetCanvas(gridCanvas, false);
-                gridLines[i][j].color = Color.cyan;
-            }
-        }
-        gridLines[0][originLineIndex] = new VectorLine("GridLines", new List<Vector3>(), 4f, LineType.Continuous, Joins.None);
-        gridLines[0][originLineIndex].SetCanvas(gridCanvas, false);
-        gridLines[0][originLineIndex].color = Color.red;
-
-        gridLines[1][originLineIndex] = new VectorLine("GridLines", new List<Vector3>(), 4f, LineType.Continuous, Joins.None);
-        gridLines[1][originLineIndex].SetCanvas(gridCanvas, false);
-        gridLines[1][originLineIndex].color = Color.red;
-
+        gridLines = new VectorLine("GridLines", new List<Vector3>(), 4f, LineType.Discrete, Joins.None);
+        gridLines.SetCanvas(gridCanvas, false);
+        
         drawGrid();
+        gridLines.SetColor(new Color(0f, 1f, 1f, 0.5f));
+        gridLines.SetColor(Color.red, originLineIndex);
+        gridLines.SetColor(Color.red, originLineIndex + numGridLines);
     }
     private WaitUntil getWait(int i, int j) {
         if (i == 0) return new WaitUntil(() => !isOpRunning[j]);
@@ -77,29 +66,29 @@ public class CartesianPlane : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha4)) StartCoroutine(setProperty(GridProperty.Y_LENGTH, 0.5f + Random.value, 1f));
     }
     public void drawGrid() {
+        gridLines.points3.Clear();
         float xLength = gridProperties[(int)GridProperty.X_LENGTH];
         float yLength = gridProperties[(int)GridProperty.Y_LENGTH];
         Vector3 point1;
         Vector3 point2;
 
-        for (int i = 0; i < gridLines.Length; i++) {
+        for (int i = 0; i < 2; i++) {
             for (int j = 0; j < numGridLines; j++) {
-                VectorLine line = gridLines[i][j];
-                line.points3.Clear();
                 int jIndex = j - originLineIndex;
+                float z = j == 0 ? origin.position.z + 1 : origin.position.z;
                 if (i == 0) {
-                    point1 = origin.position + new Vector3(jIndex * xLength, originLineIndex * yLength, origin.position.z);
-                    point2 = origin.position + new Vector3(jIndex * xLength, -originLineIndex * yLength, origin.position.z);
+                    point1 = origin.position + new Vector3(jIndex * xLength, originLineIndex * yLength, z);
+                    point2 = origin.position + new Vector3(jIndex * xLength, -originLineIndex * yLength, z);
                 }
                 else {
-                    point1 = origin.position + new Vector3(originLineIndex * xLength, jIndex * yLength, origin.position.z);
-                    point2 = origin.position + new Vector3(-originLineIndex * xLength, jIndex * yLength, origin.position.z);
+                    point1 = origin.position + new Vector3(originLineIndex * xLength, jIndex * yLength, z);
+                    point2 = origin.position + new Vector3(-originLineIndex * xLength, jIndex * yLength, z);
                 }
-                line.points3.Add(point1);
-                line.points3.Add(point2);
-                line.Draw();
+                gridLines.points3.Add(point1);
+                gridLines.points3.Add(point2);
             }
         }
+        gridLines.Draw();
     }
 
     public IEnumerator shiftOrigin(Vector3 newOrigin, float time) {

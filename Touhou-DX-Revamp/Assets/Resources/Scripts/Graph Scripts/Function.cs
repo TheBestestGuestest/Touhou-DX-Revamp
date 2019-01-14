@@ -152,14 +152,17 @@ public class FunctionLine{
                 Vector3 center = CartesianPlane.SharedPlane.pointRelativeToOrigin(originalPoints[i][0]);
                 int segments = 30;
                 for(int j = 1; j <= segments + 1; j++) temp.Add(new Vector3());
+
                 float radius = 0.1f;
+                float width = 10;
                 if(isFilled[i]){  //sus
-                    radius = 0.05f;
+                    radius /= 2;
                     lines[i].SetWidth(20);
                 }
                 lines[i].points3 = temp;
+                lines[i].SetWidth(width);
                 lines[i].MakeCircle(center, radius, segments);
-                lines[i].collider = true;
+                lines[i].color = Color.clear;
             }
             else{
                 foreach(Vector3 point in originalPoints[i]) temp.Add(CartesianPlane.SharedPlane.pointRelativeToOrigin(point));

@@ -59,7 +59,6 @@ public class Gears : Enemy
     }
 
     protected override void shoot(float globalTimer) {
-        //return;
         if(bp.allPatternsIdle() && shootTimer >= shootCooldown){
             shootTimer = 0f;
             setGearMovement(GearMovement.SLOW);

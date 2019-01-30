@@ -172,8 +172,7 @@ public class DiscontinuousLine : FunctionLine{
         isHole.Add(false);
         isFilled.Add(false);
 
-        VectorLine line = new VectorLine(""+originalPoints.Count, new List<Vector3>(), 10, LineType.Continuous, Joins.Fill);
-        line.SetCanvas(CartesianPlane.SharedPlane.getFunctionCanvas());
+        VectorLine line = new VectorLine(""+originalPoints.Count, new List<Vector3>(), 5, LineType.Continuous, Joins.Fill);
         line.color = lineColor;
         line.trigger = true;
         line.collider = false;
@@ -186,7 +185,7 @@ public class DiscontinuousLine : FunctionLine{
         originalPoints[index].Add(hole);
         isHole[index] = true;
         isFilled[index] = filled;
-        lines[index].SetWidth(filled ? 20f : 10f);
+        lines[index].SetWidth(filled ? 10f : 5f);
     }
     public override void drawLines(float start, float end){
         int count = getAllPoints().Count;
@@ -228,7 +227,7 @@ public class DiscontinuousLine : FunctionLine{
             }
         }
         //actually drawing the lines
-        foreach(VectorLine line in lines) line.Draw();
+        foreach(VectorLine line in lines) line.Draw3D();
         currDrawStart = start;
         currDrawEnd = end;
     }
@@ -249,8 +248,7 @@ public class ContinuousLine : FunctionLine{
     public override void initLine(){
         originalPoints = new List<Vector3>();
 
-        line = new VectorLine("continuous line", new List<Vector3>(), 10, LineType.Continuous, Joins.Fill);
-        line.SetCanvas(CartesianPlane.SharedPlane.getFunctionCanvas());
+        line = new VectorLine("continuous line", new List<Vector3>(), 5, LineType.Continuous, Joins.Fill);
         line.color = lineColor;
         line.trigger = true;
         line.collider = false;
@@ -270,7 +268,7 @@ public class ContinuousLine : FunctionLine{
         line.points3.Clear();
         for(int i = startIndex; i < endIndex; i++) line.points3.Add(CartesianPlane.SharedPlane.pointRelativeToOrigin(originalPoints[i]));
         if(line.points3.Count > 1) line.collider = true;
-        line.Draw();
+        line.Draw3D();
 
         currDrawStart = startIndex;
         currDrawEnd = endIndex;

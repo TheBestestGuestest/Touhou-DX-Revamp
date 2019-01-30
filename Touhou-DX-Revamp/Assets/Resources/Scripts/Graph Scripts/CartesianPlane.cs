@@ -27,14 +27,11 @@ public class CartesianPlane : MonoBehaviour {
     private int originLineIndex;
     private VectorLine gridLines;
     private Canvas gridCanvas;
-    private Canvas functionCanvas;
-    public Canvas getFunctionCanvas() { return functionCanvas; }
 
     void Awake() {
         SharedPlane = this;
         origin = transform;
         gridCanvas = GameObject.Find("Grid Canvas").GetComponent<Canvas>();
-        functionCanvas = GameObject.Find("Function Canvas").GetComponent<Canvas>();
         originLineIndex = (numGridLines - 1) / 2;
     }
 

@@ -71,15 +71,14 @@ public class PlayerStats : MonoBehaviour {
     }
 
     public IEnumerator takeDamage() {
-        currLives--;
-        psc.updateLives(currLives);
+        psc.updateLives(--currLives);
 
         if (isAlive()) {
             currBombs = maxBombs + 1;
             pic.useBomb();
             psc.updateBombs(currBombs);
-
             trans.position = SPAWN_LOC;
+            
             incrementPowerGauge(-powerReqs[getNextPowerLevel()]);
 
             yield return new WaitForSeconds(2f);

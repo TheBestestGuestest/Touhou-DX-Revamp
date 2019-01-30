@@ -18,7 +18,7 @@ public class Gears : Enemy
 
     private float shootCooldown = 5f;
     private float shootTimer = 0f;
-    private float functionCooldown = 3f;
+    private float functionCooldown = 6f;
     private float functionTimer = 0f;
     private int currFunction = 0;
 
@@ -58,8 +58,8 @@ public class Gears : Enemy
         }
     }
 
-    protected override void shoot(float globalTimer) { //sus
-        if(true) return;
+    protected override void shoot(float globalTimer) {
+        //return;
         if(bp.allPatternsIdle() && shootTimer >= shootCooldown){
             shootTimer = 0f;
             setGearMovement(GearMovement.SLOW);
@@ -70,7 +70,6 @@ public class Gears : Enemy
             if(shootTimer == 0) setGearMovement(GearMovement.FAST);
             shootTimer += Time.deltaTime;
         }
-        
     }
     protected override void move(float globalTimer) { //sus
         if(bp.getPatternState(1) == PatternState.IDLE && bp.getPatternState(2) == PatternState.IDLE){
@@ -88,16 +87,16 @@ public class Gears : Enemy
         }
         gearSprite.Rotate(rotationDirection * currRotationSpd * Vector3.forward * Time.deltaTime);
     }
-    protected override void function(float globalTimer) { //sus (next function wait dummy)
+    protected override void function(float globalTimer) {
         if(funcs.getFunction(currFunction).getCurrProcess() == FunctionProcess.UNDRAWN){
+            currFunction = (int)(Random.value * funcs.getCount());
             setGearMovement(initialRotationDirection ? GearMovement.CCW : GearMovement.CW);
-            if(currFunction == 0) functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).drawFunction(600, 6f, -6f, 6f));
-            else functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).drawFunction(600, 6f, -1.7f, 2.7f));
+            if(currFunction == 0) functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).drawFunction(600, 4f, -6f, 6f));
+            else functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).drawFunction(600, 4f, -1.7f, 2.7f));
         }
         else if(funcs.getFunction(currFunction).getCurrProcess() == FunctionProcess.IDLE){
             setGearMovement(initialRotationDirection ? GearMovement.CW : GearMovement.CCW);
-            functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).deleteFunction(5f));
-            currFunction = (int)(Random.value * funcs.getCount());
+            functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).deleteFunction(2f));
         }
     }
 
@@ -243,7 +242,7 @@ public class GearsFunctions : EnemyFunctions
                 new Vector3(x * Mathf.PI, float.PositiveInfinity), 
                 new Vector3(x * Mathf.PI, float.NaN), 
                 new Vector3(x * Mathf.PI, float.NegativeInfinity)));
-        funcList.Add(Function.Create(trans, "Prefabs/Function", eq));
+        funcList.Add(Function.Create(trans, "Prefabs/Function", eq, FunctionType.DISCONTINUOUS, Color.green));
 
         temp = (x) =>
         {
@@ -260,7 +259,6 @@ public class GearsFunctions : EnemyFunctions
                 new Vector3(x, float.PositiveInfinity), 
                 new Vector3(x, float.NaN), 
                 new Vector3(x, float.NegativeInfinity)));
-        funcList.Add(Function.Create(trans, "Prefabs/Function", eq));
-        
+        funcList.Add(Function.Create(trans, "Prefabs/Function", eq, FunctionType.DISCONTINUOUS, Color.green));
     }
 }

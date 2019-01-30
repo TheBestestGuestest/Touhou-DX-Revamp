@@ -65,6 +65,7 @@ public class Enemy : MonoBehaviour {
     protected virtual void DeathHandler(){
         Score.SharedInstance.changeScore(10000);
         terminateShootingAndFunctions();
+        funcs.setAllActiveState(false);
         StartCoroutine(bp.makeDrops(100));
         Invoke("DisableSelf", 2.5f);
     }
@@ -73,7 +74,7 @@ public class Enemy : MonoBehaviour {
         foreach(Coroutine function in functionCoroutines) if(function != null) StopCoroutine(function);
     }
     protected virtual void DisableSelf(){
-        funcs.setAllActiveState(false);
+        
         StopAllCoroutines();
         gameObject.SetActive(false);
         GameQueue.SharedInstance.isQueueing = true;

@@ -29,6 +29,9 @@ public class Function : MonoBehaviour {
     void Awake() {
         trans = transform;
         gameObject.SetActive(false);
+        FunctionLine.lineMaterial = Instantiate(Resources.Load("Materials/Function") as Material);
+        FunctionLine.lineTexture = Resources.Load("Textures/ThickLine") as Texture;
+        FunctionLine.functionCanvas = GameObject.Find("Function Canvas").GetComponent<Canvas>();
     }
     void OnEnable() {
         currProcess = FunctionProcess.UNDRAWN;
@@ -111,6 +114,10 @@ public enum FunctionProcess {
 }
 
 public class FunctionLine{
+    public static Canvas functionCanvas;
+    public static Texture lineTexture;
+    public static Material lineMaterial;
+    protected int lineWidth = 10;
     protected Color lineColor;
     protected float currDrawStart;  //0 to 1
     protected float currDrawEnd;  //0 to 1
@@ -137,12 +144,14 @@ public class DiscontinuousLine : FunctionLine{
     private List<List<Vector3>> originalPoints;
     private List<bool> isHole;
     private List<bool> isFilled;
-    private List<VectorLine> lines;
+    private List<VectorLine> visualLines;
+    private List<VectorLine> colliderLines;
 
     public DiscontinuousLine(Color c) : base(c){}
     public override void initLine(){
         originalPoints = new List<List<Vector3>>();
-        lines = new List<VectorLine>();
+        visualLines = new List<VectorLine>();
+        colliderLines = new List<VectorLine>();
         isHole = new List<bool>();
         isFilled = new List<bool>();
     }
@@ -172,12 +181,24 @@ public class DiscontinuousLine : FunctionLine{
         isHole.Add(false);
         isFilled.Add(false);
 
-        VectorLine line = new VectorLine(""+originalPoints.Count, new List<Vector3>(), 5, LineType.Continuous, Joins.Fill);
-        line.color = lineColor;
-        line.trigger = true;
-        line.collider = false;
-        line.rectTransform.gameObject.tag = "Function";
-        lines.Add(line);
+        VectorLine visualLine = new VectorLine("VISUAL "+originalPoints.Count, new List<Vector3>(), lineTexture, lineWidth, LineType.Continuous, Joins.Fill);
+        visualLine.color = lineColor;
+        visualLine.material = lineMaterial;
+        //line.smoothColor = true;
+        visualLine.rectTransform.gameObject.tag = "Function";
+        visualLine.layer = LayerMask.NameToLayer("PlayerEncounterable");
+        visualLine.SetCanvas(functionCanvas, false);
+        
+        VectorLine colliderLine = new VectorLine("COLLIDER "+originalPoints.Count, new List<Vector3>(), lineWidth, LineType.Continuous, Joins.Fill);
+        colliderLine.color = Color.clear;
+        colliderLine.trigger = true;
+        colliderLine.collider = false;
+        colliderLine.rectTransform.gameObject.tag = "Function";
+        colliderLine.layer = LayerMask.NameToLayer("PlayerEncounterable");
+        colliderLine.SetCanvas(functionCanvas, true);
+        
+        visualLines.Add(visualLine);
+        colliderLines.Add(colliderLine);
     }
     private void createHole(Vector3 hole, bool filled){
         createLine();
@@ -185,7 +206,8 @@ public class DiscontinuousLine : FunctionLine{
         originalPoints[index].Add(hole);
         isHole[index] = true;
         isFilled[index] = filled;
-        lines[index].SetWidth(filled ? 10f : 5f);
+        visualLines[index].SetWidth(filled ? lineWidth*2 : lineWidth);
+        colliderLines[index].SetWidth(filled ? lineWidth*2 : lineWidth);
     }
     public override void drawLines(float start, float end){
         int count = getAllPoints().Count;
@@ -194,32 +216,35 @@ public class DiscontinuousLine : FunctionLine{
         int currInput = 0;
         //putting in the points to be drawn
         for(int i = 0; i < originalPoints.Count; i++){
-            lines[i].points3.Clear();
+            List<Vector3> temp = new List<Vector3>();
+            visualLines[i].points3 = temp;
+            colliderLines[i].points3 = temp;
             if(isHole[i]){
                 if(currInput >= startInput && currInput <= endInput){
                     Vector3 center = CartesianPlane.SharedPlane.pointRelativeToOrigin(originalPoints[i].First());
                     float radius = isFilled[i] ? 0.05f : 0.1f;
-                    for(int j = 0; j < 30; j++) lines[i].points3.Add(originalPoints[i].First());
-                    lines[i].MakeCircle(center, radius);
+                    for(int j = 0; j < 30; j++) temp.Add(originalPoints[i].First());
+                    visualLines[i].MakeCircle(center, radius);
+                    colliderLines[i].MakeCircle(center, radius);
                 }
                 currInput++;
             }
             else{
                 foreach(Vector3 point in originalPoints[i]){
-                    if(currInput >= startInput && currInput <= endInput) lines[i].points3.Add(CartesianPlane.SharedPlane.pointRelativeToOrigin(point));
+                    if(currInput >= startInput && currInput <= endInput) temp.Add(CartesianPlane.SharedPlane.pointRelativeToOrigin(point));
                     currInput++;
                 }
             }
-            lines[i].collider = lines[i].points3.Count > 1;
+            colliderLines[i].collider = colliderLines[i].points3.Count > 1;
         }
-        //cancer hole stuff
+        //cancer hole stuff (this removes the collider too somehow)
         for(int i = 0; i < isHole.Count; i++){
             if(isHole[i] && !isFilled[i]){
-                for(int k = 0; k < lines.Count; k++){
+                for(int k = 0; k < visualLines.Count; k++){
                     if(!isHole[k]){
-                        for(int j = 0; j < lines[k].points3.Count; j++){
-                            if(Vector3.Distance(lines[k].points3[j], CartesianPlane.SharedPlane.pointRelativeToOrigin(originalPoints[i].First())) <= 0.1f){
-                                lines[k].points3.RemoveAt(j--);
+                        for(int j = 0; j < visualLines[k].points3.Count; j++){
+                            if(Vector3.Distance(visualLines[k].points3[j], CartesianPlane.SharedPlane.pointRelativeToOrigin(originalPoints[i].First())) <= 0.1f){
+                                visualLines[k].points3.RemoveAt(j--);
                             }
                         }
                     }
@@ -227,12 +252,14 @@ public class DiscontinuousLine : FunctionLine{
             }
         }
         //actually drawing the lines
-        foreach(VectorLine line in lines) line.Draw3D();
+        foreach(VectorLine line in visualLines) line.Draw();
+        foreach(VectorLine line in colliderLines) line.Draw();
         currDrawStart = start;
         currDrawEnd = end;
     }
     public override void destroyLines(){
-        VectorLine.Destroy(lines);
+        VectorLine.Destroy(visualLines);
+        VectorLine.Destroy(colliderLines);
         initLine();
     }
     public bool hasHoles(){
@@ -242,17 +269,28 @@ public class DiscontinuousLine : FunctionLine{
 }
 public class ContinuousLine : FunctionLine{
     private List<Vector3> originalPoints;
-    private VectorLine line;
+    private VectorLine visualLine;
+    private VectorLine colliderLine;
 
     public ContinuousLine(Color c) : base(c){}
     public override void initLine(){
         originalPoints = new List<Vector3>();
 
-        line = new VectorLine("continuous line", new List<Vector3>(), 5, LineType.Continuous, Joins.Fill);
-        line.color = lineColor;
-        line.trigger = true;
-        line.collider = false;
-        line.rectTransform.gameObject.tag = "Function";
+        visualLine = new VectorLine("Continuous Line Visual", new List<Vector3>(), lineTexture, lineWidth, LineType.Continuous, Joins.Fill);
+        visualLine.material = lineMaterial;
+        //line.smoothColor = true;
+        visualLine.color = lineColor;
+        visualLine.rectTransform.gameObject.tag = "Function";
+        visualLine.layer = LayerMask.NameToLayer("PlayerEncounterable");
+        visualLine.SetCanvas(functionCanvas, false);
+
+        colliderLine = new VectorLine("Continuous Line Collider", new List<Vector3>(), lineWidth, LineType.Continuous, Joins.Fill);
+        colliderLine.color = Color.clear;
+        colliderLine.trigger = true;
+        colliderLine.collider = false;
+        colliderLine.rectTransform.gameObject.tag = "Function";
+        colliderLine.layer = LayerMask.NameToLayer("PlayerEncounterable");
+        colliderLine.SetCanvas(functionCanvas, true);
     }
     public override void cachePoints(Equation eq, float startInput, float endInput, int numPoints){
         float interval = (endInput - startInput) / numPoints;
@@ -265,16 +303,20 @@ public class ContinuousLine : FunctionLine{
         int startIndex = (int)(start * originalPoints.Count);
         int endIndex = (int)(end * originalPoints.Count);
 
-        line.points3.Clear();
-        for(int i = startIndex; i < endIndex; i++) line.points3.Add(CartesianPlane.SharedPlane.pointRelativeToOrigin(originalPoints[i]));
-        if(line.points3.Count > 1) line.collider = true;
-        line.Draw3D();
+        List<Vector3> temp = new List<Vector3>();
+        visualLine.points3 = temp;
+        colliderLine.points3 = temp;
+        for(int i = startIndex; i < endIndex; i++) temp.Add(CartesianPlane.SharedPlane.pointRelativeToOrigin(originalPoints[i]));
+        colliderLine.collider = colliderLine.points3.Count > 1;
+        visualLine.Draw();
+        colliderLine.Draw();
 
         currDrawStart = startIndex;
         currDrawEnd = endIndex;
     }
     public override void destroyLines(){
-        VectorLine.Destroy(ref line);
+        VectorLine.Destroy(ref visualLine);
+        VectorLine.Destroy(ref colliderLine);
         initLine();
     }
     public void pulseColor(){

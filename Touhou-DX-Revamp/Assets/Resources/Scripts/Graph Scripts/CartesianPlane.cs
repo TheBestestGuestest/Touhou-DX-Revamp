@@ -13,7 +13,6 @@ public enum GridProperty {
 
 public class CartesianPlane : MonoBehaviour {
     public static CartesianPlane SharedPlane;
-
     private Transform origin;
     private float[] gridProperties = { 1f, 1f, 1f, 1f };  //ORDER: x-scale, x-length, y-scale, y-length
     public float xRatio() { return gridProperties[0] / gridProperties[1]; }
@@ -27,12 +26,16 @@ public class CartesianPlane : MonoBehaviour {
     private int originLineIndex;
     private VectorLine gridLines;
     private Canvas gridCanvas;
+    private Material gridMaterial;
+    private Texture gridTexture;
 
     void Awake() {
         SharedPlane = this;
         origin = transform;
-        gridCanvas = GameObject.Find("Grid Canvas").GetComponent<Canvas>();
         originLineIndex = (numGridLines - 1) / 2;
+        gridCanvas = GameObject.Find("Grid Canvas").GetComponent<Canvas>();
+        gridMaterial = Instantiate(Resources.Load("Materials/Grid") as Material);
+        gridTexture = Resources.Load("Textures/ThinLine") as Texture;
     }
 
     void Start() {
@@ -42,13 +45,15 @@ public class CartesianPlane : MonoBehaviour {
         }
 
         origin.position = new Vector3(InGameDimentions.centerX, InGameDimentions.centerY, 3);
-        gridLines = new VectorLine("GridLines", new List<Vector3>(), 4f, LineType.Discrete, Joins.None);
+        gridLines = new VectorLine("GridLines", new List<Vector3>(), gridTexture, 5f, LineType.Discrete, Joins.None);
+        gridLines.material = gridMaterial;
         gridLines.SetCanvas(gridCanvas, false);
-        
         drawGrid();
         gridLines.SetColor(new Color(0f, 1f, 1f, 0.5f));
         gridLines.SetColor(Color.red, originLineIndex);
         gridLines.SetColor(Color.red, originLineIndex + numGridLines);
+        gridLines.rectTransform.gameObject.tag = "Function";
+        gridLines.layer = LayerMask.NameToLayer("PlayerEncounterable");
     }
     private WaitUntil getWait(int i, int j) {
         if (i == 0) return new WaitUntil(() => !isOpRunning[j]);

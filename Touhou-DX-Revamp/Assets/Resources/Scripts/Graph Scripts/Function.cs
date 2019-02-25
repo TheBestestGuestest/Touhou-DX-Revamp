@@ -88,6 +88,18 @@ public class Function : MonoBehaviour {
 
         currProcess = FunctionProcess.UNDRAWN;
     }
+    public IEnumerator test(){
+        if(currProcess != FunctionProcess.IDLE){
+            Debug.Log("test did not RUN");
+            yield break;
+        }
+        currProcess = FunctionProcess.LRAM;
+
+        ContinuousLine cont = (ContinuousLine)line;
+        yield return cont.pulseColor(new Color(Random.value, Random.value, Random.value), Random.value * 3f, 0.5f, true);
+
+        currProcess = FunctionProcess.IDLE;
+    }
     public FunctionProcess getCurrProcess(){
         return currProcess;
     }
@@ -278,7 +290,6 @@ public class ContinuousLine : FunctionLine{
 
         visualLine = new VectorLine("Continuous Line Visual", new List<Vector3>(), lineTexture, lineWidth, LineType.Continuous, Joins.Fill);
         visualLine.material = lineMaterial;
-        //line.smoothColor = true;
         visualLine.color = lineColor;
         visualLine.rectTransform.gameObject.tag = "Function";
         visualLine.layer = LayerMask.NameToLayer("PlayerEncounterable");
@@ -319,7 +330,20 @@ public class ContinuousLine : FunctionLine{
         VectorLine.Destroy(ref colliderLine);
         initLine();
     }
-    public void pulseColor(){
-
+    public IEnumerator pulseColor(Color newColor, float pulseTime, float thickness, bool right){  //sus
+        for(float time = 0f; time <= pulseTime; time += Time.deltaTime){
+            float ratio = right ? time/pulseTime : (pulseTime-time)/pulseTime;
+            int segments = (originalPoints.Count-1);
+            int center = (int)(ratio * segments);
+            int interval = (int)(thickness * segments);
+            
+            visualLine.SetColor(lineColor);
+            for(int i = center - interval/2; i <= center + interval/2; i++) if(i >= 0 && i < segments){
+                float colorRatio = (float)Mathf.Abs(i - center)/(interval/2);
+                visualLine.SetColor(newColor * (1-colorRatio) + lineColor * (colorRatio), i);
+            }
+            yield return null;
+        }
+        visualLine.SetColor(lineColor);
     }
 }

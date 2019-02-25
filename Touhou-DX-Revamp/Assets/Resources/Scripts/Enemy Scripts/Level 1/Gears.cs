@@ -95,7 +95,8 @@ public class Gears : Enemy
         }
         else if(funcs.getFunction(currFunction).getCurrProcess() == FunctionProcess.IDLE){
             setGearMovement(initialRotationDirection ? GearMovement.CW : GearMovement.CCW);
-            functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).deleteFunction(2f));
+            //functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).deleteFunction(2f));
+            functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).test());
         }
     }
 
@@ -226,6 +227,7 @@ public class GearsFunctions : EnemyFunctions
 
     protected override void cacheAll()
     {
+        /* 
         temp = (x) =>
         {
             return new Vector3(x, Mathf.Sin(x * x) / (x * Mathf.Tan(x)));
@@ -259,5 +261,13 @@ public class GearsFunctions : EnemyFunctions
                 new Vector3(x, float.NaN), 
                 new Vector3(x, float.NegativeInfinity)));
         funcList.Add(Function.Create(trans, "Prefabs/Function", eq, FunctionType.DISCONTINUOUS, Color.green));
+        */
+
+        temp = (x) =>
+        {
+            return new Vector3(x, Mathf.Sin(x));
+        };
+        eq = new Equation(EquationType.RECTANGULAR, "y = sin(x)", temp);
+        funcList.Add(Function.Create(trans, "Prefabs/Function", eq, FunctionType.CONTINUOUS, Color.black));
     }
 }

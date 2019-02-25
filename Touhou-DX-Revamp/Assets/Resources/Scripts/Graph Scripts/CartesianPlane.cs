@@ -49,9 +49,10 @@ public class CartesianPlane : MonoBehaviour {
         gridLines.material = gridMaterial;
         gridLines.SetCanvas(gridCanvas, false);
         drawGrid();
+        gridLines.smoothColor = true;  //sus
         gridLines.SetColor(new Color(0f, 1f, 1f, 0.5f));
-        gridLines.SetColor(Color.red, originLineIndex);
-        gridLines.SetColor(Color.red, originLineIndex + numGridLines);
+        gridLines.SetColor(Color.red, 0);
+        gridLines.SetColor(Color.red, 1);
         gridLines.rectTransform.gameObject.tag = "Function";
         gridLines.layer = LayerMask.NameToLayer("PlayerEncounterable");
     }
@@ -71,25 +72,33 @@ public class CartesianPlane : MonoBehaviour {
         gridLines.points3.Clear();
         float xLength = gridProperties[(int)GridProperty.X_LENGTH];
         float yLength = gridProperties[(int)GridProperty.Y_LENGTH];
+
+        //origin lines
+        gridLines.points3.Add(origin.position + new Vector3(originLineIndex * xLength, 0));
+        gridLines.points3.Add(origin.position + new Vector3(-originLineIndex * xLength, 0));
+        gridLines.points3.Add(origin.position + new Vector3(0, originLineIndex * yLength));
+        gridLines.points3.Add(origin.position + new Vector3(0, -originLineIndex * yLength));
+
         Vector3 point1;
         Vector3 point2;
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < numGridLines; j++) {
                 int jIndex = j - originLineIndex;
-                float z = j == 0 ? origin.position.z + 1 : origin.position.z;
+                if(jIndex == 0) continue;
                 if (i == 0) {
-                    point1 = origin.position + new Vector3(jIndex * xLength, originLineIndex * yLength, z);
-                    point2 = origin.position + new Vector3(jIndex * xLength, -originLineIndex * yLength, z);
+                    point1 = origin.position + new Vector3(jIndex * xLength, originLineIndex * yLength);
+                    point2 = origin.position + new Vector3(jIndex * xLength, -originLineIndex * yLength);
                 }
                 else {
-                    point1 = origin.position + new Vector3(originLineIndex * xLength, jIndex * yLength, z);
-                    point2 = origin.position + new Vector3(-originLineIndex * xLength, jIndex * yLength, z);
+                    point1 = origin.position + new Vector3(originLineIndex * xLength, jIndex * yLength);
+                    point2 = origin.position + new Vector3(-originLineIndex * xLength, jIndex * yLength);
                 }
                 gridLines.points3.Add(point1);
                 gridLines.points3.Add(point2);
             }
         }
+
         gridLines.Draw();
     }
 
@@ -104,8 +113,10 @@ public class CartesianPlane : MonoBehaviour {
         }
         isOpRunning[p] = true;
         numOpInQueue[p]--;
-        //shifting the var
         if (origin.position.Equals(newOrigin)) yield break;
+        //color pulse
+        yield return pulseColorPoint(newOrigin);
+        //shifting the var
         newOrigin.z = origin.position.z;
         Vector3 oldOrigin = origin.position;
         float timeElapsed = 0f;
@@ -133,9 +144,11 @@ public class CartesianPlane : MonoBehaviour {
         }
         isOpRunning[p] = true;
         numOpInQueue[p]--;
-        //shifting the var
         if (gridProperties[p] == newVal) yield break;
+        //color pulse
         float oldVal = gridProperties[p];
+        yield return pulseColorAxis(p < 2, p % 2 == 0, (p % 2 == 0) ? newVal > oldVal : newVal < oldVal);  //wowow messy
+        //shifting the var
         float timeElapsed = 0f;
         while (timeElapsed + Time.deltaTime <= time) {
             timeElapsed += Time.deltaTime;
@@ -147,6 +160,12 @@ public class CartesianPlane : MonoBehaviour {
         drawGrid();
         //unqueue the command
         isOpRunning[p] = false;
+    }
+    public IEnumerator pulseColorAxis(bool horizontal, bool origin, bool inwards){  //sus
+        yield return null;
+    }
+    public IEnumerator pulseColorPoint(Vector3 point){  //sus
+        yield return null;
     }
     public Vector3 pointRelativeToOrigin(Vector3 point) {
         return new Vector3(origin.position.x + (point.x * xRatio()), origin.position.y + (point.y * yRatio()), origin.position.z);

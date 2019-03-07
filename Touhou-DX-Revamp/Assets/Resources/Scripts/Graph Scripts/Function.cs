@@ -338,9 +338,11 @@ public class ContinuousLine : FunctionLine{
             int interval = (int)(thickness * segments);
             
             visualLine.SetColor(lineColor);
-            for(int i = center - interval/2; i <= center + interval/2; i++) if(i >= 0 && i < segments){
-                float colorRatio = (float)Mathf.Abs(i - center)/(interval/2);
-                visualLine.SetColor(newColor * (1-colorRatio) + lineColor * (colorRatio), i);
+            for(int i = center - interval/2; i <= center + interval/2; i++){
+                if(i >= 0 && i < segments){
+                    float colorRatio = (float)Mathf.Abs(i - center)/(interval/2);
+                    visualLine.SetColor(newColor * (1-colorRatio) + lineColor * (colorRatio), i);
+                }
             }
             yield return null;
         }

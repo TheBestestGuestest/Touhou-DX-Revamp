@@ -90,13 +90,13 @@ public class Gears : Enemy
         if(funcs.getFunction(currFunction).getCurrProcess() == FunctionProcess.UNDRAWN){
             currFunction = (int)(Random.value * funcs.getCount());
             setGearMovement(initialRotationDirection ? GearMovement.CCW : GearMovement.CW);
-            if(currFunction == 0) functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).drawFunction(600, 4f, -6f, 6f));
+            if(currFunction != 1) functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).drawFunction(600, 4f, -6f, 6f));
             else functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).drawFunction(600, 4f, -1.7f, 2.7f));
         }
         else if(funcs.getFunction(currFunction).getCurrProcess() == FunctionProcess.IDLE){
             setGearMovement(initialRotationDirection ? GearMovement.CW : GearMovement.CCW);
-            //functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).deleteFunction(2f));
-            functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).test());
+            functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).deleteFunction(2f));
+            //functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).test());
         }
     }
 
@@ -227,7 +227,7 @@ public class GearsFunctions : EnemyFunctions
 
     protected override void cacheAll()
     {
-        /* 
+        
         temp = (x) =>
         {
             return new Vector3(x, Mathf.Sin(x * x) / (x * Mathf.Tan(x)));
@@ -261,7 +261,7 @@ public class GearsFunctions : EnemyFunctions
                 new Vector3(x, float.NaN), 
                 new Vector3(x, float.NegativeInfinity)));
         funcList.Add(Function.Create(trans, "Prefabs/Function", eq, FunctionType.DISCONTINUOUS, Color.green));
-        */
+        
 
         temp = (x) =>
         {

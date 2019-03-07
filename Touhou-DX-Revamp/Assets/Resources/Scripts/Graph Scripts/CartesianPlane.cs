@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using Vectrosity;
 
@@ -25,6 +26,8 @@ public class CartesianPlane : MonoBehaviour {
     private int numGridLines = 31;
     private int originLineIndex;
     private VectorLine gridLines;
+    public GameObject GridNumbers;
+    private TextMeshPro[] gridNums;
     private Canvas gridCanvas;
     private Material gridMaterial;
     private Texture gridTexture;
@@ -33,9 +36,42 @@ public class CartesianPlane : MonoBehaviour {
         SharedPlane = this;
         origin = transform;
         originLineIndex = (numGridLines - 1) / 2;
+        setUpGridNums();
+        gridNums = GridNumbers.GetComponents<TextMeshPro>();
         gridCanvas = GameObject.Find("Grid Canvas").GetComponent<Canvas>();
         gridMaterial = Instantiate(Resources.Load("Materials/Grid") as Material);
         gridTexture = Resources.Load("Textures/ThinLine") as Texture;
+    }
+
+    private void setUpGridNums(){
+        Vector3 size = new Vector3(0.5f, 0.5f);
+        Vector3 offset = new Vector3(-0.3f, -0.25f);
+        int gridLayer = SortingLayer.NameToID("Grid");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < numGridLines; j++) {
+                int jIndex = j - originLineIndex;
+                GameObject temp = new GameObject(i+" "+jIndex);
+                TextMeshPro num = temp.AddComponent<TextMeshPro>();
+                num.sortingLayerID = gridLayer;
+                num.sortingOrder = -1;
+                num.text = jIndex.ToString();
+                num.alignment = TextAlignmentOptions.TopRight;
+                num.fontSize = 2;
+                num.rectTransform.sizeDelta = size;
+                //num.font = sus;
+                if(i == 0){
+                    temp.transform.position = new Vector3(jIndex*xRatio(), 0) + offset;
+                    float transparent = 1 - Mathf.Abs(Mathf.Round(gridProperties[0]) - gridProperties[0]);
+                    num.color = Color.red * new Color(1, 1, 1, transparent);
+                }
+                else{ 
+                    temp.transform.position = new Vector3(0, jIndex*yRatio()) + offset;
+                    float transparent = 1 - Mathf.Abs(Mathf.Round(gridProperties[2]) - gridProperties[2]);
+                    num.color = Color.red * new Color(1, 1, 1, transparent);
+                }
+                temp.transform.parent = GridNumbers.transform;
+            }
+        }
     }
 
     void Start() {
@@ -49,7 +85,6 @@ public class CartesianPlane : MonoBehaviour {
         gridLines.material = gridMaterial;
         gridLines.SetCanvas(gridCanvas, false);
         drawGrid();
-        gridLines.smoothColor = true;  //sus
         gridLines.SetColor(new Color(0f, 1f, 1f, 0.5f));
         gridLines.SetColor(Color.red, 0);
         gridLines.SetColor(Color.red, 1);

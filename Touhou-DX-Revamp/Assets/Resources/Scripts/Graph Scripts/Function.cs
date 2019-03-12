@@ -96,7 +96,7 @@ public class Function : MonoBehaviour {
         currProcess = FunctionProcess.LRAM;
 
         ContinuousLine cont = (ContinuousLine)line;
-        yield return cont.pulseColor(new Color(Random.value, Random.value, Random.value), Random.value * 3f, 0.5f, true);
+        yield return cont.pulseColor(Random.ColorHSV(), Random.value * 3f, 0.5f, true);
 
         currProcess = FunctionProcess.IDLE;
     }

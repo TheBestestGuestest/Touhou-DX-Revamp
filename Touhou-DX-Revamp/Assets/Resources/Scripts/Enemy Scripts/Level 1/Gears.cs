@@ -59,6 +59,7 @@ public class Gears : Enemy
     }
 
     protected override void shoot(float globalTimer) {
+        return;
         if(bp.allPatternsIdle() && shootTimer >= shootCooldown){
             shootTimer = 0f;
             setGearMovement(GearMovement.SLOW);
@@ -76,12 +77,12 @@ public class Gears : Enemy
             if (trans.position.x + radius > InGameDimentions.rightEdge ||
                 trans.position.x - radius < InGameDimentions.leftEdge){
                 angleOfMovement.x *= -1;
-                if(bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
+                //if(bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
             }
             if (trans.position.y + radius > InGameDimentions.topEdge ||
                 trans.position.y - radius < InGameDimentions.bottomEdge){
                 angleOfMovement.y *= -1;
-                if(bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
+                //if(bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
             }
         }
         gearSprite.Rotate(rotationDirection * currRotationSpd * Vector3.forward * Time.deltaTime);
@@ -94,8 +95,8 @@ public class Gears : Enemy
             else functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).drawFunction(600, 4f, -1.7f, 2.7f));
         }
         else if(funcs.getFunction(currFunction).getCurrProcess() == FunctionProcess.IDLE){
-            setGearMovement(initialRotationDirection ? GearMovement.CW : GearMovement.CCW);
-            functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).deleteFunction(2f));
+            //setGearMovement(initialRotationDirection ? GearMovement.CW : GearMovement.CCW);
+            //functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).deleteFunction(2f));
             //functionCoroutines[currFunction] = StartCoroutine(funcs.getFunction(currFunction).test());
         }
     }

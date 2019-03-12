@@ -262,8 +262,7 @@ public class CartesianPlane : MonoBehaviour {
                 int line1 = i*numGridLines + jIndex;
                 int line2 = i*numGridLines + (numGridLines - 1 - jIndex);
                 int top = line1 == line2 ? 0 : 2;
-                float transparent1 = gridLineColors[line1].a;
-                float transparent2 = gridLineColors[line2].a;
+                float transparency = line1 == line2 ? originColor.a : baseColor.a;
                 
                 gridLineColors[line1] = pulsedColor;
                 gridLineColors[line2] = pulsedColor;
@@ -271,8 +270,8 @@ public class CartesianPlane : MonoBehaviour {
                 if(gridLineOrder.Remove(line2)) gridLineOrder.Insert(top, line2);
                 drawGrid();
                 yield return delay;
-                gridLineColors[line1] = new Color(dimmedColor.r, dimmedColor.g, dimmedColor.b, transparent1);
-                gridLineColors[line2] = new Color(dimmedColor.r, dimmedColor.g, dimmedColor.b, transparent2);
+                gridLineColors[line1] = new Color(dimmedColor.r, dimmedColor.g, dimmedColor.b, transparency);
+                gridLineColors[line2] = new Color(dimmedColor.r, dimmedColor.g, dimmedColor.b, transparency);
                 if(gridLineOrder.Remove(line1)) gridLineOrder.Insert(top, line1);
                 if(gridLineOrder.Remove(line2)) gridLineOrder.Insert(top, line2);
             }
@@ -299,7 +298,7 @@ public class CartesianPlane : MonoBehaviour {
         }
     }
     public Vector3 pointRelativeToOrigin(Vector3 point) {
-        return new Vector3(origin.position.x + (point.x * xRatio()), origin.position.y + (point.y * yRatio()), origin.position.z);
+        return new Vector3(origin.position.x + (point.x / xRatio()), origin.position.y + (point.y / yRatio()), origin.position.z);  //sus
     }
     public Vector3 getOrigin() {
         return origin.position;

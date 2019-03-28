@@ -1,29 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Score : MonoBehaviour {
-    public GameObject highScoreText;
-    public GameObject currScoreText;
-
-    private SpriteRenderer[] highScoreDigits;
-    private SpriteRenderer[] currScoreDigits;
-
-    private Sprite[] digits;
-
     public static Score SharedInstance;
+    private TextMeshProUGUI highScoreText;
+    private TextMeshProUGUI currScoreText;
     private float score = 0;
     private float highScore = 0;
     private string highScoreKey = "high score: TEST";
 
     void Awake() {
         SharedInstance = this;
+        currScoreText = GameObject.Find("Score").GetComponent<TextMeshProUGUI>();
+        highScoreText = GameObject.Find("High Score").GetComponent<TextMeshProUGUI>();
+
         if (PlayerPrefs.HasKey(highScoreKey)) highScore = PlayerPrefs.GetFloat(highScoreKey);
         else highScore = 0;
-
-        highScoreDigits = highScoreText.GetComponentsInChildren<SpriteRenderer>();
-        currScoreDigits = currScoreText.GetComponentsInChildren<SpriteRenderer>();
-        digits = Resources.LoadAll<Sprite>("Sprites/UISprites/SideUI/SideUIFont");
-
         updateScore();
     }
 
@@ -36,19 +29,8 @@ public class Score : MonoBehaviour {
     }
 
     public void updateScore() {
-        float tempScore = score;
-        for (int i = 0; i < 9; i++) {
-            int digit = (int)(tempScore % 10);
-            currScoreDigits[8 - i].sprite = digits[digit];
-            tempScore /= 10;
-        }
-
-        tempScore = highScore;
-        for (int i = 0; i < 9; i++) {
-            int digit = (int)(tempScore % 10);
-            highScoreDigits[8 - i].sprite = digits[digit];
-            tempScore /= 10;
-        }
+        currScoreText.text = score.ToString("000,000,000");
+        highScoreText.text = highScore.ToString("000,000,000");
     }
 
     public void saveScore() {

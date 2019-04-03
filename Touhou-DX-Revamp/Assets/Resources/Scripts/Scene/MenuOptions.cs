@@ -15,10 +15,12 @@ public class MenuOptions : MonoBehaviour {
     void Start() {
         if (!PlayerPrefs.HasKey("+c Mode")) PlayerPrefs.SetInt("+c Mode", 0);  //sus how to indicate that +c mode exists??
         plusCAvailable = PlayerPrefs.GetInt("+c Mode") == 1;
+        plusCAvailable = true;
         anim.SetBool("plusCAvailable", plusCAvailable);
 
         if (!PlayerPrefs.HasKey("Last Level Completed")) PlayerPrefs.SetInt("Last Level Completed", 0);
         continueLevel = PlayerPrefs.GetInt("Last Level Completed");
+        continueLevel = 1;
         anim.SetBool("continueLevel", continueLevel > 0);
 
         if (continueLevel > 0) GameObject.Find("Continue Gray").SetActive(false);
@@ -29,7 +31,7 @@ public class MenuOptions : MonoBehaviour {
     }
 
     void Update() {
-        if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f && !anim.IsInTransition(0)) {
+        if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1.25f && !anim.IsInTransition(0)) {
             if (Input.GetKey(KeyCode.UpArrow)) {
                 if (currentSelection != -1) currentSelection = Mathf.Max(currentSelection - 1, 0);
                 if (continueLevel == 0 && currentSelection == 1) currentSelection = 0;

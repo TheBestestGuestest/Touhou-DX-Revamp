@@ -165,7 +165,7 @@ public class CartesianPlane : MonoBehaviour {
                 if (scale > 1) transparency *= scale;
                 transparency = Mathf.Max(1 - 1.5f * transparency * transparency, 0);
                 numColor.a = transparency;
-                num.color = jIndex == 0 && frontOriginNum && (i != 0) ? Color.clear : numColor;
+                num.color = jIndex == 0 && ((frontOriginNum && i != 0) || (!frontOriginNum && i == 0)) ? Color.clear : numColor;
             }
         }
     }

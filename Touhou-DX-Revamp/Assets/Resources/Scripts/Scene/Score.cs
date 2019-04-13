@@ -4,6 +4,7 @@ using TMPro;
 
 public class Score : MonoBehaviour {
     public static Score SharedInstance;
+    public const float MAX_SCORE = 999999999f;
     private TextMeshProUGUI highScoreText;
     private TextMeshProUGUI currScoreText;
     private float score = 0;
@@ -21,15 +22,14 @@ public class Score : MonoBehaviour {
     }
 
     public void changeScore(float change) {
-        score += change;
-        if (score > 999999999f) score = 999999999f;
-        if (score > highScore) highScore = score;
+        score = Mathf.Min(score + change, MAX_SCORE);
+        highScore = Mathf.Max(score, highScore);
 
         updateScore();
     }
 
     public void updateScore() {
-        currScoreText.text = score.ToString("000,000,000");
+        currScoreText.text = score.ToString("000,000,000");  //sus
         highScoreText.text = highScore.ToString("000,000,000");
     }
 

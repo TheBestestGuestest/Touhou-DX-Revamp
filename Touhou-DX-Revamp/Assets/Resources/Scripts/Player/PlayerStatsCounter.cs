@@ -3,37 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerStatsCounter : MonoBehaviour {
-    public Text gauge;
     public Slider powerGauge;
-
-    public GameObject power;
-    private SpriteRenderer powerDigit;
-    private Sprite[] digits;
+    private TextMeshProUGUI power;
+    private TextMeshProUGUI gauge;
 
     public GameObject[] lifeIcons;
     public GameObject[] bombIcons;
 
     void Awake() {
-        powerDigit = power.GetComponentInChildren<SpriteRenderer>();
-        digits = Resources.LoadAll<Sprite>("Sprites/UISprites/SideUI/SideUIFont");
+        power = GameObject.Find("Power").GetComponent<TextMeshProUGUI>();
+        gauge = GameObject.Find("Gauge").GetComponent<TextMeshProUGUI>();
     }
 
     public void updateLives(int num) {
         if (num >= lifeIcons.Length) num = 3;
-        int i = 0;
-        for (; i < num; i++) lifeIcons[i].SetActive(false);
-        for (; i < lifeIcons.Length; i++) lifeIcons[i].SetActive(true);
+        for(int i = 0; i < 3; i++) lifeIcons[i].SetActive(i < num);
     }
     public void updateBombs(int num) {
         if (num >= bombIcons.Length) num = 3;
-        int i = 0;
-        for (; i < num; i++) bombIcons[i].SetActive(false);
-        for (; i < bombIcons.Length; i++) bombIcons[i].SetActive(true);
+        for(int i = 0; i < 3; i++) bombIcons[i].SetActive(i < num);
     }
     public void updatePowerGauge(int pow, int currG, int maxG) {
-        powerDigit.sprite = digits[pow + 1];
+        power.text = ""+pow;
 
         if (maxG != 0) {
             gauge.text = currG + "/" + maxG;

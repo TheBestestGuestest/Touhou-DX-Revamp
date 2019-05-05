@@ -5,21 +5,24 @@ public class Drop : Projectile {
     private Transform playerTransform;
     private Effect effect;
 
-    private float attractStrength;  //lower is better LUL
+    private bool followingPlayer = false;
+    private float followTime;
 
-    public static Drop Create(string prefab, Vector3 pos, Effect e, float s, float a) {
+    public static Drop Create(string prefab, Vector3 pos, Effect e) {
         Drop drop = (Instantiate((GameObject)Resources.Load(prefab), pos, Quaternion.identity, ProjectilePool.SharedInstance.transform) as GameObject).GetComponent<Drop>();
         //drop.effect = e;
-        drop.attractStrength = s;
-        drop.transform.Rotate(new Vector3(0, 0, a));
         drop.name = prefab.Substring(prefab.LastIndexOf("/") + 1);  //optimize???
+        drop.destroyTime = 5f;
         return drop;
     }
-
     public void setValues(Vector3 pos) {
         trans.position = pos;
     }
-
+    new void OnEnable(){
+        base.OnEnable();
+        followingPlayer = false;
+        followTime = 0f;
+    }
     new void Awake() {
         base.Awake();
 
@@ -29,9 +32,20 @@ public class Drop : Projectile {
         path = (float t, Vector3 pos) => {
             Vector3 temp = trans.position;
             Vector3 lookPos = temp - playerTransform.position;
-            float angle = Mathf.Atan2(lookPos.y, lookPos.x) * Mathf.Rad2Deg;
-            trans.rotation = Quaternion.Slerp(trans.rotation, Quaternion.AngleAxis(angle, Vector3.forward), totalTime / attractStrength);
-            temp -= trans.right * 0.32f;
+            float dist = Vector3.Distance(temp, playerTransform.position);
+
+            if(dist < 2f && !followingPlayer){
+                followingPlayer = true;
+                followTime = t;
+            }
+            if(followingPlayer){
+                Vector3 travel = lookPos * (t - followTime + 0.4f) * (t - followTime + 0.4f);
+                temp -= Vector3.Magnitude(travel) > dist ? lookPos : travel;
+            }
+            else{
+                temp += new Vector3(0, Mathf.Max(-0.064f, -0.32f * t * t + 0.064f * t + 0.064f), 0);
+            }
+
             return temp;
         };
     }

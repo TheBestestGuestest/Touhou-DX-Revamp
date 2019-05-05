@@ -30,7 +30,7 @@ public class Gears : Enemy {
     }
     protected override void initiateStats() {
         GameQueue.SharedInstance.isQueueing = false;
-        radius = 0.75f;
+        radius = 0.2f;
         maxHealth = 1500;
         currHealth = maxHealth;
         setGearMovement(GearMovement.FAST);
@@ -58,7 +58,7 @@ public class Gears : Enemy {
     }
 
     protected override void shoot(float globalTimer) {
-        //return;
+        return;
         if (bp.allPatternsIdle() && shootTimer >= shootCooldown) {
             shootTimer = 0f;
             setGearMovement(GearMovement.SLOW);
@@ -76,12 +76,12 @@ public class Gears : Enemy {
             if (trans.position.x + radius > InGameDimentions.rightEdge ||
                 trans.position.x - radius < InGameDimentions.leftEdge) {
                 angleOfMovement.x *= -1;
-                if (bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
+                //if (bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
             }
             if (trans.position.y + radius > InGameDimentions.topEdge ||
                 trans.position.y - radius < InGameDimentions.bottomEdge) {
                 angleOfMovement.y *= -1;
-                if (bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
+                //if (bp.getPatternState(0) != PatternState.FIRING) shootingCoroutines[0] = StartCoroutine(bp.runBulletPattern(0));
             }
         }
         gearSprite.Rotate(rotationDirection * currRotationSpd * Vector3.forward * Time.deltaTime);

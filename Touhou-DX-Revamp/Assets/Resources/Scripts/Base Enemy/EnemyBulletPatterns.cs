@@ -29,7 +29,7 @@ public class EnemyBulletPatterns {
     public virtual IEnumerator makeDrops(int num) {  //sus
         WaitForSeconds delay = new WaitForSeconds(0.01f);
         for (int i = 0; i < num; i++) {
-            ProjectilePool.SharedInstance.GetPooledDrop(dropPrefab, trans.position + new Vector3(UnityEngine.Random.value - 0.5f, UnityEngine.Random.value - 0.5f, 0) * 0.6f, null, 0.07f, (UnityEngine.Random.value - 0.5f) * 300 + 90);
+            ProjectilePool.SharedInstance.GetPooledDrop(dropPrefab, trans.position + new Vector3(UnityEngine.Random.value - 0.5f, UnityEngine.Random.value - 0.5f, 0) * 0.6f, null);
             yield return delay;
         }
     }

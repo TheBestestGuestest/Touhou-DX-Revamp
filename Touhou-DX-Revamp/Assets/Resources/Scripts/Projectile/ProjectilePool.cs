@@ -33,7 +33,7 @@ public class ProjectilePool : MonoBehaviour {
         pool.Add(obj);
         return obj;
     }
-    public GameObject GetPooledDrop(string prefab, Vector3 pos, Effect e, float s, float a) {
+    public GameObject GetPooledDrop(string prefab, Vector3 pos, Effect e) {
         if (!pooledDrops.ContainsKey(prefab)) pooledDrops.Add(prefab, new List<GameObject>());
         List<GameObject> pool = pooledDrops[prefab];
 
@@ -46,7 +46,7 @@ public class ProjectilePool : MonoBehaviour {
             }
         }
 
-        GameObject obj = Drop.Create(prefab, pos, e, s, a).gameObject;
+        GameObject obj = Drop.Create(prefab, pos, e).gameObject;
         pool.Add(obj);
         return obj;
     }

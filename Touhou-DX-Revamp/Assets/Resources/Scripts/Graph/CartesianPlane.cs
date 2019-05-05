@@ -72,7 +72,7 @@ public class CartesianPlane : MonoBehaviour {
         setUpGridNums();
 
         origin.position = new Vector3(InGameDimentions.centerX, InGameDimentions.centerY, 3);
-        gridLines = new VectorLine("GridLines", new List<Vector3>(), gridTexture, 5f, LineType.Discrete, Joins.None);
+        gridLines = new VectorLine("GridLines", new List<Vector3>(), gridTexture, 5f * (Screen.width / 1280f), LineType.Discrete, Joins.None);
         gridLines.material = gridMaterial;
         gridLines.SetCanvas(gridCanvas, false);
         drawGrid();

@@ -8,7 +8,7 @@ public class FunctionLine {
     public static Canvas functionCanvas;
     public static Texture lineTexture;
     public static Material lineMaterial;
-    protected int lineWidth = 10;
+    protected float lineWidth = 10f * (Screen.width / 1280f);
     protected Color lineColor;
     protected float currDrawStart;  //0 to 1
     protected float currDrawEnd;  //0 to 1

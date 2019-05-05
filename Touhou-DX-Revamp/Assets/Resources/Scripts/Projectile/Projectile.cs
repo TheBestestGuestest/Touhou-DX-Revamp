@@ -8,7 +8,7 @@ public class Projectile : MonoBehaviour {
     protected MovePath path;
     protected float totalTime;
 
-    private float destroyTime = -1;
+    protected float destroyTime = -1;
     private Vector3 spawnPos;
 
     public static Projectile Create(string prefab, Vector3 pos, MovePath mp, int dmg = 0, float t = -1, bool p = false) {
